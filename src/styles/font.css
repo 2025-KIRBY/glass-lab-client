@@ -1,0 +1,13 @@
+@font-face {
+  font-family: "Rock";
+  src: url("../assets/font/ROCK.woff2") format("woff2");
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Rock-Bold";
+  src: url("../assets/font/Rockwell-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-display: swap;
+}

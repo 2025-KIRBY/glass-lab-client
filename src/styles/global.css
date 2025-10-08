@@ -1,0 +1,25 @@
+@import "tailwindcss";
+/* @import "./font.css"; */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+:root {
+  --red-50: #931f21;
+  --neutral-95: #161616;
+}
+
+@theme {
+  --color-bg-invert: var(--red-50);
+}
+
+@layer components {
+  .skeleton {
+    animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
