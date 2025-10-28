@@ -16,14 +16,12 @@ export default function HomePage() {
   };
 
   return (
-    <div className="font-[Rock] w-full h-screen bg-[#1d1d1d] flex flex-col justify-center items-center gap-4">
-      <div className="w-[600px] flex flex-col justify-center items-start gap-4">
-        <h1 className="font-bold text-white text-[3rem]">
-          Add Style Images ...
-        </h1>
-        <h2 className="text-white text-[1.6rem]">
-          Upload images and make your own mood board.
-        </h2>
+    <div className="w-full h-screen flex flex-col justify-center items-center gap-4">
+      <div>
+        <h1 className="step-title">STEP 1. What's your Mood?</h1>
+        <h2 className="step-desc">취향의 이미지를 두 개 이상 넣어주세요.</h2>
+      </div>
+      <div className="min-w-[600px] max-w-[90vw] flex flex-col justify-center items-start gap-4">
         <input
           ref={inputRef}
           id="file-upload"
@@ -34,15 +32,15 @@ export default function HomePage() {
         <div
           onClick={() => inputRef.current?.click()}
           htmlFor="file-upload"
-          className="hover:border-[#B0AAA6] transition-border duration-300 cursor-pointer w-full min-h-[20vh] border-dashed border-2 border-[#454647] rounded-md p-4 mt-4 flex justify-center items-center"
+          className="hover:border-[#B0AAA6] transition-border duration-300 cursor-pointer min-w-full max-w-[90vh] min-h-[20vh] border-dashed border-1 border-border-gray rounded-md p-4 mt-4 flex justify-center items-center"
         >
           {files.length === 0 ? (
             <div className="flex flex-col justify-center items-center gap-2">
-              <ImageIcon size={32} color="#454647" weight="bold" />
-              <span className="text-[#454647]">Click to upload</span>
+              <ImageIcon size={32} color="#8f8b8b" weight="light" />
+              <span className="text-text-gray">Click to upload</span>
             </div>
           ) : (
-            <div className="flex flex-wrap gap-2">
+            <div className=" max-w-[90vw] max-h-[40vh] flex flex-wrap gap-2 overflow-y-scroll">
               {Array.from(files).map((file, index) => (
                 <div className="relative" key={index}>
                   <img
@@ -52,9 +50,13 @@ export default function HomePage() {
                   />
                   <div
                     onClick={(event) => handleFileRemove(event, index)}
-                    className="hover:bg-red-700 absolute top-2 right-2 bg-[#41403C] rounded-full p-3 cursor-pointer"
+                    className="group hover:bg-main absolute top-2 right-2 bg-[#41403C] rounded-full p-3 cursor-pointer"
                   >
-                    <TrashIcon size={21} color="#fff" />
+                    <TrashIcon
+                      size={21}
+                      color="#fff"
+                      className="group-hover:fill-text-black"
+                    />
                   </div>
                 </div>
               ))}
