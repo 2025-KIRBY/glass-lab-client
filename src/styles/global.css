@@ -14,39 +14,85 @@ html {
 
 :root {
   --main-bg: #fbfbfb;
-  --pink-100: #ffceec;
-  --black-800: #282828;
-  --black-300: #8f8b8b;
+  --pink-300: #ffceec;
+  --pink-600: #d095af;
+  --gray-800: #282828;
+  --gray-500: #5b5b5b;
+  --gray-300: #8f8b8b;
 }
 
 @theme {
-  --color-bg: var(--main-bg);
-  --color-main: var(--pink-100);
-  --color-gradient-main: linear-gradient(
+  --color--bg: var(--main-bg);
+  --color-main: var(--pink-300);
+
+  /* text */
+  --color-text-black: var(--gray-800);
+  --color-text-gray500: var(--gray-500);
+  --color-text-gray: var(--gray-300);
+
+  /* border */
+  --color-border-gray: var(--gray-300);
+  --color-border-pink: var(--pink-600);
+
+  /* gradient */
+  --gradient-main: linear-gradient(
     180deg,
     rgba(255, 255, 255, 1) 0%,
     rgba(255, 206, 236, 0.74) 71%,
-    var(--pink-100) 100%
+    var(--pink-300) 100%
   );
-  --color-gradient-button: linear-gradient(
+  --gradient-button: linear-gradient(
     180deg,
     #fff 0%,
     rgba(238, 238, 238, 0.74) 70.67%,
-    var(--pink-100) 100%
+    var(--pink-300) 100%
   );
-  --color-text-black: var(--black-800);
-  --color-text-gray: var(--black-300);
-  --color-border-gray-light: var(--black-300);
 }
 
 @layer components {
-  .step-title {
+  .heading_20b {
     @apply text-[2rem] text-text-black font-[700] tracking-[-1px];
   }
-  .step-desc {
+  .label_14l {
     @apply text-[1.4rem] text-text-gray font-[300] tracking-[-1px];
+  }
+  .label_17m {
+    @apply text-[1.7rem] text-text-gray500 font-[300] tracking-[-1px];
+  }
+  .label_20l {
+    @apply text-[2rem] text-text-gray font-[300] tracking-[-1px];
   }
   .skeleton {
     animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  .basic-shadow {
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  }
+  .button-shadow {
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+  .radial-gradient {
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      var(--pink-300) 31.73%,
+      rgba(255, 206, 236, 0) 100%
+    );
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #e0e0e0;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--pink-300);
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #f472b6;
   }
 }

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
-import HomePage from "./pages/Home";
 import CommonLayout from "./components/common/CommonLayout";
+import MainPage from "./pages/MainPage";
+import MakePage from "./pages/MakePage";
 
 const routes = [
   {
@@ -9,11 +10,11 @@ const routes = [
     children: [
       {
         path: "/",
-        element: <HomePage />,
+        element: <MainPage />,
       },
       {
-        path: "/about",
-        element: <div>About</div>,
+        path: "/make",
+        element: <MakePage />,
       },
     ],
   },
