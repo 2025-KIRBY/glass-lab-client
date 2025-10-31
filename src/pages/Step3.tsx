@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { useStep } from "../context/StepContext";
 
 const getRadiusByWidth = (width: number) => {
   if (width >= 1960) {
     return 40;
   } else if (width >= 1024) {
     // 1024px 이상 (데스크탑)
-    return 25;
+    return 23;
   } else if (width >= 768) {
     // 768px ~ 1023px (태블릿)
     return 20;
@@ -19,6 +20,34 @@ export default function StepThreePage() {
   const letters = ["A", "B", "C", "D", "E", "F"];
   const itemCount = 6;
   const [radiusRem, setRadiusRem] = useState(25);
+  const [urls, setUrls] = useState<string[]>([]);
+  const [selectedUrl, setSelectedUrl] = useState<number | null>(null);
+
+  const { setCurrentStep, previewImageFiles, setSelectedImageFile } = useStep();
+
+  useEffect(() => {
+    // 1. previewImageFiles가 File[] 배열인지 확인
+    if (previewImageFiles.length === 0) {
+      return; // 배열이 비어있으면 아무것도 안 함
+    }
+
+    const urls: string[] = [];
+    // 2. File 배열을 순회 (Object.entries가 필요 없음)
+    for (const file of previewImageFiles) {
+      // 3. File 객체로부터 바로 URL 생성 (async/await 필요 없음)
+      const url = URL.createObjectURL(file);
+      urls.push(url);
+    }
+
+    setUrls(urls);
+
+    // 💡 중요: 메모리 누수를 방지하기 위해
+    //    컴포넌트가 언마운트될 때 생성된 URL들을 해제(revoke)해야 합니다.
+    return () => {
+      console.log("🧹 URL 해제 중...");
+      urls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [previewImageFiles]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -30,6 +59,15 @@ export default function StepThreePage() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const handleSubmit = () => {
+    if (!selectedUrl) {
+      console.error("❌ 파일이 선택되지 않았습니다.");
+      return;
+    }
+    setSelectedImageFile(previewImageFiles[Number(selectedUrl)]);
+    setCurrentStep(4);
+  };
 
   return (
     <div className="relative w-full h-screen flex flex-col justify-center items-center gap-4">
@@ -47,35 +85,47 @@ export default function StepThreePage() {
         </h2>
       </div>
 
-      {Array.from({ length: itemCount }).map((_, index) => {
+      {urls.map((url, index) => {
         const angleDeg = (360 / itemCount) * index;
         const xPos = `calc(-50% + ${radiusRem}rem * cos(${angleDeg}deg))`;
         const yPos = `calc(-50% + ${radiusRem}rem * sin(${angleDeg}deg))`;
 
         return (
           <div
+            onClick={() => setSelectedUrl(index)}
             key={index}
             style={{
               translate: `${xPos} ${yPos}`,
             }}
             className="group cursor-pointer absolute top-1/2 left-1/2 w-[18rem] h-[18rem]"
           >
-            <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out absolute w-full h-full inset-0 radial-gradient"></div>
-            <div className="z-10 absolute top-8 left-1 w-[3.5rem] h-[3.5rem] rounded-full bg-white flex justify-center items-center text-text-black border-1 border-text-black group-hover:[background:var(--gradient-main)]">
+            <div
+              className={`opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out absolute w-[170%] h-[170%] top-[-20%] left-[-30%] radial-gradient ${
+                selectedUrl === index ? "opacity-100" : ""
+              }`}
+            ></div>
+            <div
+              className={`z-10 absolute top-8 left-1 w-[3.5rem] h-[3.5rem] rounded-full bg-white flex justify-center items-center text-text-black border-1 border-text-black group-hover:[background:var(--gradient-main)] ${
+                selectedUrl === index ? "[background:var(--gradient-noop)]" : ""
+              }`}
+            >
               <span className="text-[2rem] font-bold h-[2.5rem]">
                 {letters[index]}
               </span>
             </div>
             <img
               className="z-0 object-cover absolute inset-0 w-full h-full"
-              src={`/output1.png`}
+              src={url}
               alt={`result-${index}`}
             />
           </div>
         );
       })}
 
-      <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-10 cursor-pointer label_17m w-[20rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:-translate-y-9">
+      <button
+        onClick={handleSubmit}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-10 cursor-pointer label_17m w-[20rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:-translate-y-9"
+      >
         Next Step
       </button>
     </div>

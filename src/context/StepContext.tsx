@@ -1,6 +1,8 @@
 import { createContext, useContext, useState } from "react";
 
 type StepContextType = {
+  currentStep: number;
+  setCurrentStep: (step: number) => void;
   initImage: File | null;
   setInitImage: (file: File | null) => void;
   conceptImages: FileList | null;
@@ -10,14 +12,30 @@ type StepContextType = {
   handleInitImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleConceptImagesChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleConditionImagesChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  previewImageUrls: string[];
+  setPreviewImageUrls: (urls: string[]) => void;
+  selectedImageFile: File | null;
+  setSelectedImageFile: (file: File | null) => void;
+  previewImageFiles: File[];
+  setPreviewImageFiles: (files: File[]) => void;
+  prompt: string;
+  setPrompt: (prompt: string) => void;
+  maskImage: File | null;
+  setMaskImage: (file: File | null) => void;
 };
 
 export const StepContext = createContext<StepContextType | null>(null);
 
 export function StepProvider({ children }: { children: React.ReactNode }) {
+  const [currentStep, setCurrentStep] = useState<number>(1);
   const [initImage, setInitImage] = useState<File | null>(null);
   const [conceptImages, setConceptImages] = useState<FileList | null>(null);
   const [conditionImages, setConditionImages] = useState<FileList | null>(null);
+  const [previewImageFiles, setPreviewImageFiles] = useState<File[]>([]);
+  const [previewImageUrls, setPreviewImageUrls] = useState<string[]>([]);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [prompt, setPrompt] = useState<string>("glasses");
+  const [maskImage, setMaskImage] = useState<File | null>(null);
 
   const handleInitImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -40,6 +58,8 @@ export function StepProvider({ children }: { children: React.ReactNode }) {
   return (
     <StepContext.Provider
       value={{
+        currentStep,
+        setCurrentStep,
         initImage,
         setInitImage,
         conceptImages,
@@ -49,6 +69,16 @@ export function StepProvider({ children }: { children: React.ReactNode }) {
         handleInitImageChange,
         handleConceptImagesChange,
         handleConditionImagesChange,
+        previewImageUrls,
+        setPreviewImageUrls,
+        selectedImageFile,
+        setSelectedImageFile,
+        previewImageFiles,
+        setPreviewImageFiles,
+        prompt,
+        setPrompt,
+        maskImage,
+        setMaskImage,
       }}
     >
       {children}

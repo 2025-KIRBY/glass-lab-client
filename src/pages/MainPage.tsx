@@ -9,8 +9,10 @@ export default function MainPage(): React.JSX.Element {
   const step = useStep();
 
   // ✅ 추가된 state
+  const [previewInpaint, setPreviewInpaint] = useState<string[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [maskImage, setMaskImage] = useState<File | null>(null); // ✅ 마스크 이미지 state 추가
 
   if (!step) {
     return (
@@ -31,6 +33,12 @@ export default function MainPage(): React.JSX.Element {
     handleConceptImagesChange,
     handleConditionImagesChange,
   } = step;
+
+  // ✅ 마스크 이미지 핸들러
+  const handleMaskImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setMaskImage(file);
+  };
 
   // ✅ ZIP 요청 후 미리보기 표시
   const handleSubmit = async () => {
@@ -79,18 +87,54 @@ export default function MainPage(): React.JSX.Element {
 
   // ✅ 선택한 이미지 `/inpaint`로 전송
   const handleSendToInpaint = async () => {
+    if (!initImage) return console.error("❌ 뼈대 이미지를 선택해주세요.");
+    if (!conceptImages || conceptImages.length < 2)
+      return console.error("❌ 콘셉트 이미지를 2장 이상 선택해주세요.");
+    if (!conditionImages || conditionImages.length < 5)
+      return console.error("❌ 조건 이미지를 5장 선택해주세요.");
+    if (!maskImage) return console.error("❌ 마스크 이미지를 선택해주세요."); // ✅ 마스크 체크 추가
     if (!selectedImage) return alert("이미지를 선택해주세요!");
 
-    const blob = await fetch(selectedImage).then((r) => r.blob());
-    const formData = new FormData();
-    formData.append("file", blob, "selected-image.png");
-
     try {
-      const res = await axios.post("/inpaint", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const formData = new FormData();
+      formData.append("prompt", "glasses");
+      formData.append("init_image", initImage);
+      formData.append("mask_image", maskImage);
+      for (const file of conceptImages)
+        formData.append("new_concept_images", file);
+      for (const file of conditionImages)
+        formData.append("condition_images", file);
+
+      // const blob = await fetch(selectedImage).then((r) => r.blob());
+      // formData.append("selected_image", blob, "selected-image.png");
+
+      const res = await axios.post(
+        "https://xz97ddu0vypwh4-8000.proxy.runpod.net/inpaint",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          responseType: "arraybuffer",
+        }
+      );
+
       alert("🎨 Inpaint 전송 완료!");
-      console.log(res.data);
+      // 백엔드가 ZIP을 반환한다고 가정
+      const contentType = res.headers["content-type"];
+      console.log("📦 응답 타입:", contentType);
+      // ✅ ZIP 파일 압축 해제
+      const zip = await JSZip.loadAsync(res.data);
+      const urls: string[] = [];
+
+      for (const [filename, file] of Object.entries(zip.files)) {
+        if (!file.dir && /\.(png|jpg|jpeg)$/i.test(filename)) {
+          const blob = await file.async("blob");
+          const url = URL.createObjectURL(blob);
+          urls.push(url);
+        }
+      }
+
+      setPreviewInpaint(urls);
+      console.log("🖼️ 이미지 미리보기 생성 완료:", urls.length);
     } catch (err) {
       console.error("❌ Inpaint 요청 실패:", err);
     }
@@ -142,6 +186,19 @@ export default function MainPage(): React.JSX.Element {
             className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 cursor-pointer"
           />
         </div>
+
+        {/* ✅ 새로 추가된 마스크 이미지 인풋 */}
+        <div>
+          <label className="block text-lg font-semibold text-gray-700 mb-2">
+            4. 마스크 이미지 (Mask Image)
+          </label>
+          <input
+            type="file"
+            accept="image/jpeg, image/png"
+            onChange={handleMaskImageChange}
+            className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer"
+          />
+        </div>
       </div>
 
       {/* 버튼 */}
@@ -178,6 +235,21 @@ export default function MainPage(): React.JSX.Element {
           >
             선택한 이미지 Inpaint로 전송
           </button>
+          {previewInpaint.length > 0 && (
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">Inpaint 미리보기</h3>
+              <div className="grid grid-cols-3 gap-4">
+                {previewInpaint.map((url, i) => (
+                  <img
+                    key={i}
+                    src={url}
+                    alt={`inpaint-preview-${i}`}
+                    className="w-32 h-32 object-cover rounded-lg"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -41,6 +41,12 @@ html {
     rgba(255, 206, 236, 0.74) 71%,
     var(--pink-300) 100%
   );
+  --gradient-noop: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 206, 236, 1) 71%,
+    var(--pink-300) 100%
+  );
   --gradient-gray: linear-gradient(180deg, #fff 0%, #f4f4f4 100%);
   --gradient-button: linear-gradient(
     180deg,

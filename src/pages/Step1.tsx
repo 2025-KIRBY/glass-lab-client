@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useStep } from "../context/StepContext";
-import { useSearchParams } from "react-router-dom";
 
 interface GuideImageType {
   thumb_url: string;
@@ -13,13 +12,13 @@ interface GuideImageType {
 }
 
 export default function StepOnePage() {
-  const [, setSearchParams] = useSearchParams();
+  // const [, setSearchParams] = useSearchParams();
   const [guideImages, setGuideImages] = useState<GuideImageType[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [selectedGuide, setSelectedGuide] = useState<number | null>(null);
 
-  const { setConceptImages } = useStep();
+  const { setConceptImages, setCurrentStep } = useStep();
 
   useEffect(() => {
     const fetchGuideImages = async () => {
@@ -122,7 +121,7 @@ export default function StepOnePage() {
       setConceptImages(dataTransfer.files);
     }
 
-    setSearchParams({ step: "2" });
+    setCurrentStep(2);
   };
 
   return (
@@ -181,7 +180,7 @@ export default function StepOnePage() {
           )}
         </div>
       </div>
-      <h2 className="label_14l mt-[6rem] mb-[2rem]">
+      <h2 className="label_14l mt-[3rem] mb-[2rem]">
         생각나는 이미지가 없다면 가이드 이미지를 선택해 보세요 .
       </h2>
       <div className="mb-20 max-w-[1100px] flex flex-wrap justify-start items-center gap-4">
