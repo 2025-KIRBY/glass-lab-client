@@ -41,6 +41,7 @@ html {
     rgba(255, 206, 236, 0.74) 71%,
     var(--pink-300) 100%
   );
+  --gradient-gray: linear-gradient(180deg, #fff 0%, #f4f4f4 100%);
   --gradient-button: linear-gradient(
     180deg,
     #fff 0%,
@@ -58,6 +59,9 @@ html {
   }
   .label_17m {
     @apply text-[1.7rem] text-text-gray500 font-[300] tracking-[-1px];
+  }
+  .label_12m {
+    @apply text-[1.2rem] text-text-gray500 font-[300] tracking-[-1px];
   }
   .label_20l {
     @apply text-[2rem] text-text-gray font-[300] tracking-[-1px];

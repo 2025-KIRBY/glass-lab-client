@@ -2,9 +2,10 @@ import { useSearchParams } from "react-router-dom";
 import StepOnePage from "./Step1";
 import StepTwoPage from "./Step2";
 import StepThreePage from "./Step3";
+import StepFourPage from "./Step4";
 
 export default function MakePage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const currentStep = searchParams.get("step");
 
   //   useEffect(() => {
@@ -18,5 +19,7 @@ export default function MakePage() {
     return <StepTwoPage />;
   } else if (currentStep === "3") {
     return <StepThreePage />;
+  } else if (currentStep === "4") {
+    return <StepFourPage />;
   }
 }

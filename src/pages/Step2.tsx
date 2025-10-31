@@ -1,6 +1,7 @@
 import { collection, query, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
+import { useStep } from "../context/StepContext";
 
 interface FrameImageType {
   thumb_url: string;
@@ -11,6 +12,9 @@ export default function StepTwoPage() {
   const [frameThumbImages, setFrameThumbImages] = useState<FrameImageType[]>(
     []
   );
+  const { conceptImages } = useStep();
+
+  console.log(conceptImages);
 
   useEffect(() => {
     const fetchGuideImages = async () => {
@@ -46,7 +50,7 @@ export default function StepTwoPage() {
           </div>
         ))}
       </div>
-      <button className="cursor-pointer label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-2">
+      <button className="cursor-pointer label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-1">
         Next Step
       </button>
     </div>

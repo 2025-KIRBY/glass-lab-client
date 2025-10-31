@@ -3,16 +3,23 @@ import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
+import { useStep } from "../context/StepContext";
+import { useSearchParams } from "react-router-dom";
 
 interface GuideImageType {
-  img_url: string;
+  thumb_url: string;
+  second_url: string;
   id: number;
 }
 
 export default function StepOnePage() {
+  const [, setSearchParams] = useSearchParams();
   const [guideImages, setGuideImages] = useState<GuideImageType[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedGuide, setSelectedGuide] = useState<number | null>(null);
+
+  const { setConceptImages } = useStep();
 
   useEffect(() => {
     const fetchGuideImages = async () => {
@@ -27,6 +34,10 @@ export default function StepOnePage() {
   }, []);
 
   useEffect(() => {
+    if (files.length > 0) {
+      setSelectedGuide(null);
+    }
+
     const objectUrls = files.map((file) => URL.createObjectURL(file));
     return () => {
       objectUrls.forEach((url) => URL.revokeObjectURL(url));
@@ -48,6 +59,72 @@ export default function StepOnePage() {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
+  const handleSubmit = async () => {
+    if (selectedGuide !== null) {
+      try {
+        const selectedImage = guideImages.find(
+          (img) => img.id === selectedGuide
+        );
+        if (!selectedImage) {
+          alert("선택된 가이드 이미지를 찾을 수 없습니다.");
+          return;
+        }
+
+        // 2. URL을 File 객체로 변환하는 헬퍼 함수
+        const urlToFile = async (
+          url: string,
+          filename: string
+        ): Promise<File> => {
+          const response = await fetch(url); // 이미지 URL로 fetch 요청
+          const blob = await response.blob(); // 응답을 Blob으로 변환
+          return new File([blob], filename, { type: blob.type }); // Blob으로 File 객체 생성
+        };
+
+        // 3. 썸네일과 세컨드 이미지를 병렬로 fetch하여 File 객체로 변환
+        const [thumbFile, secondFile] = await Promise.all([
+          urlToFile(
+            selectedImage.thumb_url,
+            `guide_thumb_${selectedImage.id}.jpg`
+          ),
+          urlToFile(
+            selectedImage.second_url,
+            `guide_second_${selectedImage.id}.jpg`
+          ),
+        ]);
+
+        // 4. File 객체 2개를 FileList로 만들기 (DataTransfer 객체 활용)
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(thumbFile);
+        dataTransfer.items.add(secondFile);
+
+        // 5. Context에 FileList 설정
+        setConceptImages(dataTransfer.files);
+      } catch (error) {
+        console.error("Error converting guide images:", error);
+        alert("가이드 이미지를 처리하는 중 오류가 발생했습니다.");
+        return; // 오류 발생 시 중단
+      }
+    } else {
+      // --- B. 사용자가 직접 이미지를 업로드한 경우 (기존 로직) ---
+      if (files.length < 2) {
+        alert("취향 이미지를 두 개 이상 선택해주세요.");
+        return;
+      }
+      if (files.length > 5) {
+        alert("취향 이미지를 다섯 개 이하로 선택해주세요.");
+        return;
+      }
+
+      // (개선) File[]을 FileList로 변환하는 더 표준적인 방법
+      const dataTransfer = new DataTransfer();
+      files.forEach((file) => dataTransfer.items.add(file));
+
+      setConceptImages(dataTransfer.files);
+    }
+
+    setSearchParams({ step: "2" });
+  };
+
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center gap-4">
       <div className="w-full flex flex-col justify-center items-start gap-1 px-[20%]">
@@ -57,6 +134,7 @@ export default function StepOnePage() {
       <div className="min-w-[60vw] max-w-[90vw] flex flex-col justify-center items-start gap-4">
         <input
           ref={inputRef}
+          accept="image/jpeg, image/png"
           multiple
           id="file-upload"
           type="file"
@@ -65,7 +143,7 @@ export default function StepOnePage() {
         />
         <div
           onClick={() => inputRef.current?.click()}
-          className="hover: transition-border duration-300 cursor-pointer min-w-full max-w-[90vh] min-h-[20vh] border-dashed border-1 border-border-gray rounded-md p-4 mt-4 flex justify-center items-center"
+          className="hover: transition-border duration-300 cursor-pointer min-w-full max-w-[90vh] min-h-[25vh] border-dashed border-1 border-border-gray rounded-md p-4 mt-4 flex justify-center items-center"
         >
           {files.length === 0 ? (
             <div className="flex flex-col justify-center items-center gap-2">
@@ -108,20 +186,48 @@ export default function StepOnePage() {
       </h2>
       <div className="mb-20 max-w-[1100px] flex flex-wrap justify-start items-center gap-4">
         {guideImages.map((image, index) => (
-          <div
-            className="active:scale-95 group cursor-pointer hover:border-border-pink hover:border-1 relative w-[18rem] h-[18rem] border-border-gray border-1 basic-shadow"
+          <button
+            onClick={() => setSelectedGuide(image.id)}
+            disabled={files.length > 0}
+            className={`group transition-all duration-300 ease-out relative w-[18rem] h-[18rem] border-border-gray border-1 basic-shadow ${
+              files.length > 0
+                ? "grayscale-100 opacity-50 cursor-not-allowed"
+                : "hover:border-border-pink active:scale-95 cursor-pointer"
+            }`}
             key={index}
           >
             <img
               className="object-cover w-full h-full"
-              src={image.img_url}
+              src={image.thumb_url}
               alt={`guide-${index}`}
             />
-            <div className="group-hover:opacity-100 opacity-0 transition-all duration-300 ease-out absolute w-full h-full inset-0 [background:var(--gradient-main)]"></div>
-          </div>
+            {selectedGuide === image.id ? (
+              <div
+                className={`absolute w-full h-full inset-0 [background:var(--gradient-main)] ${
+                  files.length > 0 ? "" : "group-hover:opacity-100"
+                }`}
+              ></div>
+            ) : (
+              <div
+                className={`opacity-0 transition-all duration-300 ease-out absolute w-full h-full inset-0 [background:var(--gradient-main)] ${
+                  files.length > 0 ? "" : "group-hover:opacity-100"
+                }`}
+              ></div>
+            )}
+          </button>
         ))}
       </div>
-      <button className="cursor-pointer label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-2">
+      <button
+        // disabled={
+        //   files.length < 2 || files.length > 5 || selectedGuide === null
+        // }
+        onClick={handleSubmit}
+        className={`transition-all duration-300 ease-out label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] ${
+          (files.length >= 2 && files.length <= 5) || selectedGuide !== null
+            ? "cursor-pointer active:[box-shadow:none] active:translate-y-1"
+            : "grayscale-100 opacity-50 cursor-not-allowed"
+        }`}
+      >
         Next Step
       </button>
     </div>

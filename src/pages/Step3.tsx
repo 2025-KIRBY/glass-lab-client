@@ -60,20 +60,22 @@ export default function StepThreePage() {
             }}
             className="group cursor-pointer absolute top-1/2 left-1/2 w-[18rem] h-[18rem]"
           >
-            <div className=" opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out absolute w-full h-full inset-0 radial-gradient"></div>
-            <div className="z-10 absolute top-2 left-2 w-[4rem] h-[4rem] rounded-full bg-white flex justify-center items-center font-700 text-text-black border-1 border-text-black font-[2.4rem]">
-              <span>{letters[index]}</span>
+            <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out absolute w-full h-full inset-0 radial-gradient"></div>
+            <div className="z-10 absolute top-8 left-1 w-[3.5rem] h-[3.5rem] rounded-full bg-white flex justify-center items-center text-text-black border-1 border-text-black group-hover:[background:var(--gradient-main)]">
+              <span className="text-[2rem] font-bold h-[2.5rem]">
+                {letters[index]}
+              </span>
             </div>
             <img
               className="z-0 object-cover absolute inset-0 w-full h-full"
-              src={`/output.png`}
+              src={`/output1.png`}
               alt={`result-${index}`}
             />
           </div>
         );
       })}
 
-      <button className="absolute top-1/2 left-1/2 -translate-x-1/2 cursor-pointer label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-2">
+      <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-10 cursor-pointer label_17m w-[20rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:-translate-y-9">
         Next Step
       </button>
     </div>
