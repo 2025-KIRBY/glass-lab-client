@@ -71,7 +71,6 @@ export default function MaskGenerateLoading() {
         }
       );
 
-      alert("🎨 Inpaint 전송 완료!");
       // 백엔드가 ZIP을 반환한다고 가정
       const contentType = res.headers["content-type"];
       console.log("📦 응답 타입:", contentType);
