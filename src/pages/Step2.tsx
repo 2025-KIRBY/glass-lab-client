@@ -5,6 +5,7 @@ import { useStep } from "../context/StepContext";
 
 interface FrameImageType {
   thumb_url: string;
+  png_url: string;
   image_urls: string[];
   id: number;
 }
@@ -110,8 +111,8 @@ export default function StepTwoPage() {
               }`}
             ></div>
             <img
-              className="z-3 object-cover absolute inset-0 w-full h-full"
-              src={image.thumb_url}
+              className="cursor-pointer z-3 object-cover absolute inset-0 w-full h-full"
+              src={image.png_url}
               alt={`guide-${index}`}
             />
           </div>

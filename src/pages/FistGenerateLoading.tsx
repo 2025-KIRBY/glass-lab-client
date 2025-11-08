@@ -35,7 +35,7 @@ export default function FirstGenerateLoading() {
 
       // ZIP 바이너리로 응답 받기
       const response = await axios.post(
-        "https://xz97ddu0vypwh4-8000.proxy.runpod.net/generate",
+        "https://u8i7cgfkr9l1wi-8000.proxy.runpod.net/generate",
         formData,
         { responseType: "blob" }
       );

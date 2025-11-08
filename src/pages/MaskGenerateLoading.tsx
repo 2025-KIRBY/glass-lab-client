@@ -63,7 +63,7 @@ export default function MaskGenerateLoading() {
       }
 
       const res = await axios.post(
-        "https://xz97ddu0vypwh4-8000.proxy.runpod.net/inpaint",
+        "https://u8i7cgfkr9l1wi-8000.proxy.runpod.net/inpaint",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

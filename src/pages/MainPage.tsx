@@ -59,7 +59,7 @@ export default function MainPage(): React.JSX.Element {
 
       // ZIP 바이너리로 응답 받기
       const response = await axios.post(
-        "https://xz97ddu0vypwh4-8000.proxy.runpod.net/generate",
+        "https://u8i7cgfkr9l1wi-8000.proxy.runpod.net/generate",
         formData,
         { responseType: "blob" }
       );
@@ -109,7 +109,7 @@ export default function MainPage(): React.JSX.Element {
       // formData.append("selected_image", blob, "selected-image.png");
 
       const res = await axios.post(
-        "https://xz97ddu0vypwh4-8000.proxy.runpod.net/inpaint",
+        "https://u8i7cgfkr9l1wi-8000.proxy.runpod.net/inpaint",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
