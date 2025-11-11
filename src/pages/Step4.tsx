@@ -2,6 +2,8 @@ import { CaretLeftIcon, CircleIcon, EraserIcon } from "@phosphor-icons/react";
 import Canvas, { CanvasHandle } from "../components/Make/Canvas";
 import { useStep } from "../context/StepContext";
 import { useEffect, useRef, useState } from "react";
+import { storage } from "../../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 function triggerDownload(url: string, filename: string) {
   const link = document.createElement("a");
@@ -17,6 +19,7 @@ type DownloadFormat = "png" | "jpg" | "glb";
 
 export default function StepFourPage() {
   const {
+    initImage,
     setSelectedImageFile,
     selectedImageFile,
     setPrompt,
@@ -92,6 +95,8 @@ export default function StepFourPage() {
   }
 
   async function handleDownloadSelectedImage() {
+    console.log(initImage);
+
     if (!selectedImageUrl) {
       console.error("❌ 다운로드할 이미지가 없습니다.");
       return;
@@ -104,14 +109,13 @@ export default function StepFourPage() {
       return;
     }
 
-    // 1. 캔버스를 사용해 이미지 포맷 변환 및 다운로드
     const image = new Image();
     image.crossOrigin = "anonymous";
     image.src = selectedImageUrl;
 
-    image.onload = () => {
+    image.onload = async () => {
       const canvas = document.createElement("canvas");
-      canvas.width = image.naturalWidth; // 원본 해상도 사용
+      canvas.width = image.naturalWidth;
       canvas.height = image.naturalHeight;
 
       const ctx = canvas.getContext("2d");
@@ -121,14 +125,42 @@ export default function StepFourPage() {
       const mimeType = selectedFormat === "png" ? "image/png" : "image/jpeg";
       const dataUrl = canvas.toDataURL(mimeType, 1.0);
 
-      // 2. 헬퍼 함수로 다운로드 실행
-      triggerDownload(dataUrl, `selected_image.${selectedFormat}`);
+      // ✅ 1️⃣ 로컬 다운로드
+      triggerDownload(
+        dataUrl,
+        `result_${initImage?.name || "이름 없음"}.${selectedFormat}`
+      );
+
+      // ✅ 2️⃣ Firebase Storage 업로드
+      try {
+        // DataURL → Blob 변환
+        const response = await fetch(dataUrl);
+        const blob = await response.blob();
+
+        // Firebase Storage 참조 경로 지정
+        const fileName = `result_${
+          initImage?.name || "이름 없음"
+        }_${Date.now()}.${selectedFormat}`;
+        const storageRef = ref(storage, `gallery/${fileName}`);
+
+        // 업로드 실행
+        const snapshot = await uploadBytes(storageRef, blob);
+        const downloadURL = await getDownloadURL(snapshot.ref);
+
+        console.log("✅ Firebase 업로드 성공:", downloadURL);
+        alert("이미지가 Firebase에 업로드되었습니다!");
+      } catch (error) {
+        console.error("❌ Firebase 업로드 실패:", error);
+      }
     };
+
     image.onerror = () => {
       console.error("❌ 이미지 로드에 실패했습니다.");
     };
   }
+
   console.log(selectedImageFile instanceof File);
+
   return (
     <div className="w-screen h-screen grid grid-cols-[1fr_500px] pt-[8.2rem] border-border-gray">
       <div className="relative w-full border-t-1 border-r-1 flex justify-center items-center">
@@ -208,12 +240,12 @@ export default function StepFourPage() {
                   size={25}
                 />
               </button>
-              {/* <button
-                onClick={handleDownloadMask}
-                className="mt-4 cursor-pointer label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-gray)] active:[box-shadow:none] active:translate-y-1" // (스타일은 회색 버튼으로 임의 지정)
+              <button
+                onClick={() => setWandStep(4)}
+                className={`label_17m text-[1.4rem] cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[7rem] h-[5rem] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] `}
               >
-                Download Mask
-              </button> */}
+                RESET
+              </button>
             </div>
           </div>
           <div className="mt-[4rem] flex flex-col">
@@ -239,19 +271,25 @@ export default function StepFourPage() {
             <div className="relative grid grid-cols-3 bg-white border-1 border-[#d6d6d6] px-2 py-2 gap-2 max-w-[30rem] rounded-[3rem]">
               <span
                 onClick={() => setSelectedFormat("png")}
-                className="cursor-pointer bg-main rounded-[3rem] w-full text-center text-[1.6rem] text-text-black font-[300]"
+                className={`cursor-pointer rounded-[3rem] w-full text-center text-[1.6rem] text-text-black font-[300] ${
+                  selectedFormat === "png" ? "bg-main" : ""
+                }`}
               >
                 .png
               </span>
               <span
                 onClick={() => setSelectedFormat("jpg")}
-                className="cursor-pointer rounded-[3rem] w-full text-center text-[1.6rem] text-text-black font-[300]"
+                className={`cursor-pointer rounded-[3rem] w-full text-center text-[1.6rem] text-text-black font-[300] ${
+                  selectedFormat === "jpg" ? "bg-main" : ""
+                }`}
               >
                 .jpg
               </span>
               <span
                 onClick={() => setSelectedFormat("glb")}
-                className="cursor-pointer rounded-[3rem] w-full text-center text-[1.6rem] text-text-black font-[300]"
+                className={`cursor-pointer rounded-[3rem] w-full text-center text-[1.6rem] text-text-black font-[300] ${
+                  selectedFormat === "glb" ? "bg-main" : ""
+                }`}
               >
                 .glb
               </span>

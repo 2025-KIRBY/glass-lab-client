@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
-import type { MouseEvent, TouchEvent } from "react"; // 👈 TouchEvent 추가
+import type { MouseEvent, TouchEvent } from "react";
 
 // Define the brush color as a constant
 const BRUSH_COLOR = "rgba(254,206,237,0.7)";
@@ -16,16 +16,13 @@ export type CanvasHandle = {
 
 type CanvasProps = {
   wandStep: number | null;
-  className?: string; // 👈 부모로부터 className을 받도록 추가
+  className?: string;
   originalWidth: number;
   originalHeight: number;
 };
 
 const Canvas = forwardRef<CanvasHandle, CanvasProps>(
-  (
-    { wandStep, className, originalWidth, originalHeight }, // 👈 className 받기
-    ref
-  ) => {
+  ({ wandStep, className, originalWidth, originalHeight }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
@@ -33,14 +30,7 @@ const Canvas = forwardRef<CanvasHandle, CanvasProps>(
     const [isDrawing, setIsDrawing] = useState(false);
 
     // ⛔️ [문제 1] 충돌의 원인이 되는 High-DPI용 useEffect 제거
-    // 이 Effect는 originalWidth/Height 로직과 충돌하며,
-    // 캔버스 context를 덮어써서 좌표 스케일링(scale(2,2))이
-    // 리셋되는 문제를 일으켰습니다.
-    /*
-    useEffect(() => {
-      // ... 이 부분 전체를 삭제 ...
-    }, []);
-    */
+    // ...
 
     // ✨ [해결 1] 캔버스 해상도 설정 Effect
     // 캔버스 해상도 설정과 context 설정을 이 Effect에서 *모두* 처리합니다.
@@ -66,10 +56,8 @@ const Canvas = forwardRef<CanvasHandle, CanvasProps>(
 
     // ✨ [해결 2] 브러시 설정 Effect
     // 이 Effect는 'wandStep' 또는 'ctx'가 변경될 때만 실행됩니다.
-    // 이제 위 Effect에서 ctx를 올바르게 설정해주기 때문에
-    // "얇은 검은색 브러시" 문제가 해결됩니다.
     useEffect(() => {
-      if (!ctx) return; // context가 없으면 아무것도 안 함
+      if (!ctx) return;
 
       switch (wandStep) {
         case 0: // 👈 wandStep가 0일 때 (기본값)
@@ -92,14 +80,23 @@ const Canvas = forwardRef<CanvasHandle, CanvasProps>(
           ctx.lineWidth = 40;
           ctx.strokeStyle = "rgba(0,0,0,1)"; // 지우개는 색상 무관
           break;
-        default:
-          // wandStep이 null이거나 예상치 못한 값일 때 (예: case 0과 동일하게)
+        default: // wandStep이 null, 4 또는 예상치 못한 값일 때
           ctx.globalCompositeOperation = "source-over";
           ctx.strokeStyle = BRUSH_COLOR;
-          ctx.lineWidth = 40; // 👈 null일 때도 0번 브러시가 되도록 설정
+          ctx.lineWidth = 40;
           break;
       }
-    }, [wandStep, ctx]); // wandStep이나 ctx가 바뀔 때마다 실행
+    }, [wandStep, ctx]);
+
+    // ✅ [추가] 캔버스 초기화 Effect: wandStep이 4일 때 캔버스 전체를 지웁니다.
+    useEffect(() => {
+      // ctx가 준비되었고 wandStep이 정확히 4일 때만 실행
+      if (!ctx || wandStep !== 4) return;
+
+      // 캔버스 전체를 지웁니다.
+      ctx.clearRect(0, 0, originalWidth, originalHeight);
+      console.log("🧹 캔버스 초기화 완료: wandStep이 4로 설정됨");
+    }, [wandStep, ctx, originalWidth, originalHeight]);
 
     // ✨ [해결 3] 좌표 스케일링 함수
     // CSS 크기(e.g., 400x300)와 캔버스 해상도(e.g., 1920x1080) 사이의

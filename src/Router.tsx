@@ -5,6 +5,7 @@ import MakePage from "./pages/MakePage";
 import FirstGenerateLoading from "./pages/FistGenerateLoading";
 import StepFourPage from "./pages/Step4";
 import StepThreePage from "./pages/Step3";
+import GalleryPage from "./pages/Gallery";
 
 const routes = [
   {
@@ -30,6 +31,10 @@ const routes = [
       {
         path: "/test/3",
         element: <StepThreePage />,
+      },
+      {
+        path: "/gallery",
+        element: <GalleryPage />,
       },
     ],
   },
