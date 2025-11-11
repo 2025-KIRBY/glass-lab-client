@@ -3,6 +3,8 @@ import CommonLayout from "./components/common/CommonLayout";
 import MainPage from "./pages/MainPage";
 import MakePage from "./pages/MakePage";
 import FirstGenerateLoading from "./pages/FistGenerateLoading";
+import StepFourPage from "./pages/Step4";
+import StepThreePage from "./pages/Step3";
 
 const routes = [
   {
@@ -20,6 +22,14 @@ const routes = [
       {
         path: "/loading",
         element: <FirstGenerateLoading />,
+      },
+      {
+        path: "/test/4",
+        element: <StepFourPage />,
+      },
+      {
+        path: "/test/3",
+        element: <StepThreePage />,
       },
     ],
   },

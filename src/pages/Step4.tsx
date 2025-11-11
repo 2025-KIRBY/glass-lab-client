@@ -1,4 +1,4 @@
-import { CircleIcon, EraserIcon } from "@phosphor-icons/react";
+import { CaretLeftIcon, CircleIcon, EraserIcon } from "@phosphor-icons/react";
 import Canvas, { CanvasHandle } from "../components/Make/Canvas";
 import { useStep } from "../context/StepContext";
 import { useEffect, useRef, useState } from "react";
@@ -131,7 +131,13 @@ export default function StepFourPage() {
   console.log(selectedImageFile instanceof File);
   return (
     <div className="w-screen h-screen grid grid-cols-[1fr_500px] pt-[8.2rem] border-border-gray">
-      <div className="w-full border-t-1 border-r-1 flex justify-center items-center">
+      <div className="relative w-full border-t-1 border-r-1 flex justify-center items-center">
+        <button
+          onClick={() => setCurrentStep(3)}
+          className="flex items-center justify-center absolute top-[2rem] left-[2rem] label_17m w-[5rem] h-[4.5rem] border-1 border-text-gray [background:var(--gradient-button)] cursor-pointer"
+        >
+          <CaretLeftIcon size={25} color="#8f8b8b" />
+        </button>
         <div className="relative inline-block">
           <img
             className="block object-contain h-[50%] max-w-[30vw]"
