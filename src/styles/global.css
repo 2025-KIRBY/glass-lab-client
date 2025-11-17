@@ -1,5 +1,5 @@
 @import "tailwindcss";
-/* @import "./font.css"; */
+@import "./font.css";
 
 * {
   box-sizing: border-box;
@@ -10,6 +10,7 @@ html {
   background-color: var(--main-bg);
   background-image: url("../assets//img/grid_background.svg");
   background-size: cover;
+  /* font-family: "Inria-Sans", sans-serif; */
 }
 
 :root {
@@ -22,6 +23,9 @@ html {
 }
 
 @theme {
+  --font-inria-sans: "Inria-Sans", sans-serif;
+  --font-pretendard: "Pretendard", sans-serif;
+
   --color--bg: var(--main-bg);
   --color-main: var(--pink-300);
 
@@ -58,19 +62,22 @@ html {
 
 @layer components {
   .heading_20b {
-    @apply text-[2rem] text-text-black font-[700] tracking-[-1px];
+    @apply font-inria-sans text-[2rem] text-text-black font-[700] tracking-[-1px];
   }
   .label_14l {
-    @apply text-[1.4rem] text-text-gray font-[300] tracking-[-1px];
+    @apply font-inria-sans text-[1.4rem] text-text-gray font-[300] tracking-[-1px];
   }
   .label_17m {
-    @apply text-[1.7rem] text-text-gray500 font-[300] tracking-[-1px];
+    @apply font-inria-sans text-[1.7rem] text-text-gray500 font-[300] tracking-[-1px];
+  }
+  .label_17r {
+    @apply font-inria-sans text-[1.7rem] text-text-gray500 font-[600] tracking-[-1px];
   }
   .label_12m {
-    @apply text-[1.2rem] text-text-gray500 font-[300] tracking-[-1px];
+    @apply font-inria-sans text-[1.2rem] text-text-gray500 font-[300] tracking-[-1px];
   }
   .label_20l {
-    @apply text-[2rem] text-text-gray font-[300] tracking-[-1px];
+    @apply font-inria-sans text-[2rem] text-text-gray font-[300] tracking-[-1px];
   }
   .skeleton {
     animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;

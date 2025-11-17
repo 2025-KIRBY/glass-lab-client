@@ -11,39 +11,16 @@
   font-style: normal;
   font-display: swap;
 } */
-
-.inria-sans-light {
-  font-family: "Inria Sans", sans-serif;
-  font-weight: 300;
+@font-face {
+  font-family: "Inria-Sans", sans-serif;
+  src: url("../assets/font/InriaSans-Regular.woff2") format("woff2");
   font-style: normal;
+  font-display: swap;
 }
 
-.inria-sans-regular {
-  font-family: "Inria Sans", sans-serif;
-  font-weight: 400;
+@font-face {
+  font-family: "Pretendard", sans-serif;
+  src: url("../assets/font/PretendardVariable.woff2") format("woff2");
   font-style: normal;
-}
-
-.inria-sans-bold {
-  font-family: "Inria Sans", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.inria-sans-light-italic {
-  font-family: "Inria Sans", sans-serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.inria-sans-regular-italic {
-  font-family: "Inria Sans", sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.inria-sans-bold-italic {
-  font-family: "Inria Sans", sans-serif;
-  font-weight: 700;
-  font-style: italic;
+  font-display: swap;
 }

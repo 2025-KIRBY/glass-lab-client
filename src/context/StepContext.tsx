@@ -5,8 +5,12 @@ type StepContextType = {
   setCurrentStep: (step: number) => void;
   initImage: File | null;
   setInitImage: (file: File | null) => void;
+  initId: number | null;
+  setInitId: (id: number | null) => void;
   conceptImages: FileList | null;
   setConceptImages: (files: FileList | null) => void;
+  inpaintConceptImages: FileList | null;
+  setInpaintConceptImages: (files: FileList | null) => void;
   conditionImages: FileList | null;
   setConditionImages: (files: FileList | null) => void;
   handleInitImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -29,6 +33,9 @@ export const StepContext = createContext<StepContextType | null>(null);
 export function StepProvider({ children }: { children: React.ReactNode }) {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [initImage, setInitImage] = useState<File | null>(null);
+  const [initId, setInitId] = useState<number | null>(null);
+  const [inpaintConceptImages, setInpaintConceptImages] =
+    useState<FileList | null>(null);
   const [conceptImages, setConceptImages] = useState<FileList | null>(null);
   const [conditionImages, setConditionImages] = useState<FileList | null>(null);
   const [previewImageFiles, setPreviewImageFiles] = useState<File[]>([]);
@@ -62,8 +69,12 @@ export function StepProvider({ children }: { children: React.ReactNode }) {
         setCurrentStep,
         initImage,
         setInitImage,
+        initId,
+        setInitId,
         conceptImages,
         setConceptImages,
+        inpaintConceptImages,
+        setInpaintConceptImages,
         conditionImages,
         setConditionImages,
         handleInitImageChange,

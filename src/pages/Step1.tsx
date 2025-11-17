@@ -127,7 +127,9 @@ export default function StepOnePage() {
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center gap-4">
       <div className="w-full flex flex-col justify-center items-start gap-1 px-[20%]">
-        <h1 className="heading_20b">STEP 1. What's your Mood?</h1>
+        <h1 className="heading_20b font-[600] text-text-black">
+          STEP 1. What's your Mood?
+        </h1>
         <h2 className="label_14l">취향의 이미지를 두 개 이상 넣어주세요 .</h2>
       </div>
       <div className="min-w-[60vw] max-w-[90vw] flex flex-col justify-center items-start gap-4">

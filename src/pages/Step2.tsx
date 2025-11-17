@@ -14,8 +14,13 @@ export default function StepTwoPage() {
   const [frameThumbImages, setFrameThumbImages] = useState<FrameImageType[]>(
     []
   );
-  const { setCurrentStep, conceptImages, setConditionImages, setInitImage } =
-    useStep();
+  const {
+    setCurrentStep,
+    conceptImages,
+    setConditionImages,
+    setInitImage,
+    setInitId,
+  } = useStep();
   const [selectedCondition, setSelectedCondition] = useState<number | null>(
     null
   );
@@ -81,6 +86,7 @@ export default function StepTwoPage() {
       // 5. Context에 FileList 설정
       setConditionImages(dataTransfer.files);
       setInitImage(BaseImage);
+      setInitId(selectedCondition);
     } catch (error) {
       console.error("Error converting condition images:", error);
       alert("CONDITION 이미지를 처리하는 중 오류가 발생했습니다.");

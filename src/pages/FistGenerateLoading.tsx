@@ -1,10 +1,10 @@
-import axios from "axios";
-import { useStep } from "../context/StepContext";
-import JSZip from "jszip";
 import { useEffect, useState } from "react";
+import { useStep } from "../context/StepContext";
 
 export default function FirstGenerateLoading() {
   const [loading, setLoading] = useState(true);
+  const [sendFiles, setSendFiles] = useState<File[]>([]);
+
   const {
     setCurrentStep,
     initImage,
@@ -17,7 +17,7 @@ export default function FirstGenerateLoading() {
     handleSubmit();
   }, []);
 
-  const handleSubmit = async () => {
+  async function handleSubmit() {
     if (!initImage) return console.error("❌ 뼈대 이미지를 선택해주세요.");
     if (!conceptImages || conceptImages.length < 2)
       return console.error("❌ 콘셉트 이미지를 2장 이상 선택해주세요.");
@@ -27,64 +27,133 @@ export default function FirstGenerateLoading() {
     try {
       const formData = new FormData();
       formData.append("init_image", initImage);
-      for (const file of conceptImages) formData.append("concept_images", file);
-      for (const file of conditionImages)
-        formData.append("condition_images", file);
 
-      console.log("🚀 전송 중...");
-
-      // ZIP 바이너리로 응답 받기
-      const response = await axios.post(
-        "https://u8i7cgfkr9l1wi-8000.proxy.runpod.net/generate",
-        formData,
-        { responseType: "blob" }
+      Array.from(conceptImages).forEach((f) =>
+        formData.append("concept_images", f)
+      );
+      Array.from(conditionImages).forEach((f) =>
+        formData.append("condition_images", f)
       );
 
-      console.log("📦 ZIP 응답 수신 완료");
+      console.log("🚀 스트림 수신 시작...");
 
-      // ✅ ZIP 파일 압축 해제
-      const zip = await JSZip.loadAsync(response.data);
-      const filePromises: Promise<File>[] = [];
+      const response = await fetch(
+        "https://exdjgmvhy6anjk-8000.proxy.runpod.net/generate",
+        { method: "POST", body: formData }
+      );
 
-      // zip.forEach를 사용해 zip 안의 모든 파일/폴더를 순회합니다.
-      // (relativePath: 파일명, zipEntry: JSZipObject)
-      zip.forEach((relativePath, zipEntry) => {
-        // 1. 폴더는 건너뜁니다.
-        if (zipEntry.dir) {
-          return;
+      const contentType = response.headers.get("Content-Type");
+      if (!contentType) throw new Error("Content-Type 없음");
+
+      const boundaryMatch = contentType.match(/boundary=([^;]+)/);
+      if (!boundaryMatch) throw new Error("boundary 값을 찾을 수 없음");
+
+      const boundary = `--${boundaryMatch[1]}`;
+
+      if (!response.body) throw new Error("ReadableStream 없음");
+
+      const reader = response.body.getReader();
+      const chunks: Uint8Array[] = [];
+      const files: File[] = [];
+
+      let buffer = new Uint8Array(0);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        // 기존 buffer + 새로운 chunk 병합
+        const merged = new Uint8Array(buffer.length + value.length);
+        merged.set(buffer);
+        merged.set(value, buffer.length);
+        buffer = merged;
+
+        // boundary 기준으로 split
+        let boundaryBytes = new TextEncoder().encode(boundary);
+        let pos = indexOfBytes(buffer, boundaryBytes);
+
+        // boundary가 포함된 경우
+        while (pos !== -1) {
+          const part = buffer.slice(0, pos);
+          buffer = buffer.slice(pos + boundaryBytes.length);
+
+          const file = extractFileFromPart(part);
+          if (file) files.push(file);
+          console.log("얍,", file);
+
+          setSendFiles([...files]);
+
+          pos = indexOfBytes(buffer, boundaryBytes);
         }
-        // 2. JSZipObject에서 blob 데이터를 비동기적으로 추출합니다.
-        const promise = zipEntry.async("blob").then((content) => {
-          // 3. blob 데이터를 File 객체로 만듭니다.
-          // (relativePath는 'images/image1.png' 같은 형태일 수 있으므로
-          //  zipEntry.name을 사용하는 것이 더 정확할 수 있습니다.)
-          return new File([content], zipEntry.name, { type: content.type });
-        });
+      }
 
-        filePromises.push(promise);
-      });
+      console.log("🖼️ 이미지 수신 완료:", files.length);
+      setPreviewImageFiles(files);
 
-      // 4. 모든 파일이 File 객체로 변환될 때까지 기다립니다.
-      const imageFiles = await Promise.all(filePromises);
-
-      // 5. 이제 File[] 타입의 배열을 상태에 저장합니다.
-      setPreviewImageFiles(imageFiles);
-
-      console.log("🖼️ 이미지 미리보기 생성 완료:", imageFiles.length);
       setLoading(false);
-      setTimeout(() => {
-        setCurrentStep(3);
-      }, 1000);
-    } catch (error) {
-      console.error("❌ 요청 실패:", error);
+      setTimeout(() => setCurrentStep(3), 800);
+    } catch (err) {
+      console.error("❌ 전송 실패:", err);
     }
-  };
+  }
+
+  useEffect(() => {
+    console.log("🚀전송할 파일들:", sendFiles);
+  }, [sendFiles]);
+
+  /**
+   * Uint8Array 안에 boundary(Uint8Array) 존재 위치 찾기
+   */
+  function indexOfBytes(buffer: Uint8Array, search: Uint8Array): number {
+    for (let i = 0; i <= buffer.length - search.length; i++) {
+      let match = true;
+      for (let j = 0; j < search.length; j++) {
+        if (buffer[i + j] !== search[j]) {
+          match = false;
+          break;
+        }
+      }
+      if (match) return i;
+    }
+    return -1;
+  }
+
+  /**
+   * 하나의 multipart 파트를 File 로 변환
+   */
+  function extractFileFromPart(part: Uint8Array): File | null {
+    const text = new TextDecoder().decode(part);
+
+    const headerEnd = text.indexOf("\r\n\r\n");
+    if (headerEnd === -1) return null;
+
+    const header = text.slice(0, headerEnd);
+    const bodyStart = headerEnd + 4;
+
+    // 파일 이름
+    const filenameMatch = header.match(/filename="(.+?)"/);
+    const filename = filenameMatch
+      ? filenameMatch[1]
+      : `image_${Date.now()}.png`;
+
+    // Content-Type
+    const contentTypeMatch = header.match(/Content-Type:\s*(.*)/);
+    const contentType = contentTypeMatch
+      ? contentTypeMatch[1].trim()
+      : "application/octet-stream";
+
+    // 바이너리 body (텍스트로 디코딩하면 손상되므로 raw 유지)
+    const body = part.slice(bodyStart);
+
+    return new File([body], filename, { type: contentType });
+  }
+
   return (
     <div>
       {loading ? (
         <div className="flex flex-col items-center">
           <p className="heading_20b">이미지 생성 중...</p>
-          <img className="" src="/loading.svg" alt="" />
+          <img src="/loading.svg" alt="loading" />
         </div>
       ) : (
         <p>생성 완료! 다음 단계로 이동합니다.</p>
