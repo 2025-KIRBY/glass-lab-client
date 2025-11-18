@@ -11,6 +11,138 @@ interface GuideImageType {
   id: number;
 }
 
+// --- 스켈레톤 로딩이 적용된 사용자 업로드 이미지 아이템 ---
+function UserImageItem({
+  file,
+  index,
+  onRemove,
+}: {
+  file: File;
+  index: number;
+  onRemove: (event: React.MouseEvent<HTMLDivElement>, index: number) => void;
+}) {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    if (imgLoaded) {
+      // 이미지가 로드되면 0.5초 후 스켈레톤을 DOM에서 제거
+      const timer = setTimeout(() => setShowSkeleton(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [imgLoaded]);
+
+  return (
+    <motion.div
+      layout
+      className="relative"
+      key={`${file.name}-${file.lastModified}`}
+    >
+      {showSkeleton && (
+        <div
+          className={`absolute inset-0 w-auto h-[20vh] rounded-[1rem] bg-gray-200 ${
+            // 이미지와 동일한 크기/스타일
+            imgLoaded ? "opacity-0" : "opacity-100"
+          } transition-opacity duration-500 ease-in-out`}
+        ></div>
+      )}
+      <img
+        src={URL.createObjectURL(file)} // 기존 로직과 동일하게 유지
+        alt={`upload-${index}`}
+        className={`w-auto h-[20vh] object-cover rounded-[1rem] ${
+          // 기존 클래스
+          imgLoaded ? "opacity-100" : "opacity-0"
+        } transition-opacity duration-500 ease-in-out`}
+        onLoad={() => setImgLoaded(true)}
+        loading="lazy"
+      />
+      <div
+        onClick={(event) => onRemove(event, index)}
+        className="group hover:bg-main active:scale-[0.95] absolute top-2 right-2 bg-[#41403C] rounded-full p-3 cursor-pointer"
+      >
+        <TrashIcon
+          size={21}
+          color="#fff"
+          className="group-hover:fill-text-black"
+        />
+      </div>
+    </motion.div>
+  );
+}
+
+// --- 스켈레톤 로딩이 적용된 가이드 이미지 아이템 ---
+function GuideImageItem({
+  image,
+  index,
+  selectedGuide,
+  filesLength,
+  onSelect,
+}: {
+  image: GuideImageType;
+  index: number;
+  selectedGuide: number | null;
+  filesLength: number;
+  onSelect: (id: number) => void;
+}) {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    if (imgLoaded) {
+      // 이미지가 로드되면 0.5초 후 스켈레톤을 DOM에서 제거
+      const timer = setTimeout(() => setShowSkeleton(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [imgLoaded]);
+
+  return (
+    <button
+      onClick={() => onSelect(image.id)}
+      disabled={filesLength > 0}
+      className={`flex-shrink-0 group transition-all duration-300 ease-out relative w-[18rem] h-[18rem] border-border-gray border-1 basic-shadow ${
+        // 기존 클래스
+        filesLength > 0
+          ? "grayscale-100 opacity-50 cursor-not-allowed"
+          : "hover:border-border-pink active:scale-95 cursor-pointer"
+      }`}
+      key={index}
+    >
+      {showSkeleton && (
+        <div
+          className={`absolute inset-0 object-cover w-full h-full bg-gray-200 ${
+            // 이미지와 동일한 크기/스타일
+            imgLoaded ? "opacity-0" : "opacity-100"
+          } transition-opacity duration-500 ease-in-out`}
+        ></div>
+      )}
+      <img
+        className={`object-cover w-full h-full ${
+          // 기존 클래스
+          imgLoaded ? "opacity-100" : "opacity-0"
+        } transition-opacity duration-500 ease-in-out`}
+        src={image.thumb_url}
+        alt={`guide-${index}`}
+        onLoad={() => setImgLoaded(true)}
+        loading="lazy"
+      />
+      {selectedGuide === image.id ? (
+        <div
+          className={`absolute w-full h-full inset-0 [background:var(--gradient-main)] ${
+            filesLength > 0 ? "" : "group-hover:opacity-100"
+          }`}
+        ></div>
+      ) : (
+        <div
+          className={`opacity-0 transition-all duration-300 ease-out absolute w-full h-full inset-0 [background:var(--gradient-main)] ${
+            filesLength > 0 ? "" : "group-hover:opacity-100"
+          }`}
+        ></div>
+      )}
+    </button>
+  );
+}
+
+// --- 기존 StepOnePage 컴포넌트 ---
 export default function StepOnePage() {
   // const [, setSearchParams] = useSearchParams();
   const [guideImages, setGuideImages] = useState<GuideImageType[]>([]);
@@ -32,6 +164,7 @@ export default function StepOnePage() {
     fetchGuideImages();
   }, []);
 
+  // ★★★ 기존 로직 (절대 변경 안 함) ★★★
   useEffect(() => {
     if (files.length > 0) {
       setSelectedGuide(null);
@@ -43,6 +176,7 @@ export default function StepOnePage() {
     };
   }, [files]);
 
+  // ★★★ 기존 로직 (절대 변경 안 함) ★★★
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const filesList = event.target.files;
     if (!filesList) return;
@@ -50,6 +184,7 @@ export default function StepOnePage() {
     setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
   };
 
+  // ★★★ 기존 로직 (절대 변경 안 함) ★★★
   const handleFileRemove = (
     event: React.MouseEvent<HTMLDivElement>,
     index: number
@@ -58,6 +193,7 @@ export default function StepOnePage() {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
+  // ★★★ 기존 로직 (절대 변경 안 함) ★★★
   const handleSubmit = async () => {
     if (selectedGuide !== null) {
       try {
@@ -69,17 +205,15 @@ export default function StepOnePage() {
           return;
         }
 
-        // 2. URL을 File 객체로 변환하는 헬퍼 함수
         const urlToFile = async (
           url: string,
           filename: string
         ): Promise<File> => {
-          const response = await fetch(url); // 이미지 URL로 fetch 요청
-          const blob = await response.blob(); // 응답을 Blob으로 변환
-          return new File([blob], filename, { type: blob.type }); // Blob으로 File 객체 생성
+          const response = await fetch(url);
+          const blob = await response.blob();
+          return new File([blob], filename, { type: blob.type });
         };
 
-        // 3. 썸네일과 세컨드 이미지를 병렬로 fetch하여 File 객체로 변환
         const [thumbFile, secondFile] = await Promise.all([
           urlToFile(
             selectedImage.thumb_url,
@@ -91,20 +225,17 @@ export default function StepOnePage() {
           ),
         ]);
 
-        // 4. File 객체 2개를 FileList로 만들기 (DataTransfer 객체 활용)
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(thumbFile);
         dataTransfer.items.add(secondFile);
 
-        // 5. Context에 FileList 설정
         setConceptImages(dataTransfer.files);
       } catch (error) {
         console.error("Error converting guide images:", error);
         alert("가이드 이미지를 처리하는 중 오류가 발생했습니다.");
-        return; // 오류 발생 시 중단
+        return;
       }
     } else {
-      // --- B. 사용자가 직접 이미지를 업로드한 경우 (기존 로직) ---
       if (files.length < 2) {
         alert("취향 이미지를 두 개 이상 선택해주세요.");
         return;
@@ -114,7 +245,6 @@ export default function StepOnePage() {
         return;
       }
 
-      // (개선) File[]을 FileList로 변환하는 더 표준적인 방법
       const dataTransfer = new DataTransfer();
       files.forEach((file) => dataTransfer.items.add(file));
 
@@ -126,7 +256,7 @@ export default function StepOnePage() {
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center gap-4">
-      <div className="w-full flex flex-col justify-center items-start gap-1 px-[20%]">
+      <div className="w-full flex flex-col justify-center items-start gap-1 px-[0%]">
         <h1 className="heading_20b font-[600] text-text-black">
           STEP 1. What's your Mood?
         </h1>
@@ -154,29 +284,16 @@ export default function StepOnePage() {
           ) : (
             <AnimatePresence>
               <div className="custom-scrollbar w-full max-h-[20vh] flex flex-wrap gap-2 overflow-y-auto">
+                {/* --- ▼▼▼ 수정된 부분 (1) ▼▼▼ --- */}
                 {files.map((file, index) => (
-                  <motion.div
-                    layout
-                    className="relative"
+                  <UserImageItem
                     key={`${file.name}-${file.lastModified}`}
-                  >
-                    <img
-                      src={URL.createObjectURL(file)}
-                      alt={`upload-${index}`}
-                      className="w-auto h-[20vh] object-cover rounded-[1rem]"
-                    />
-                    <div
-                      onClick={(event) => handleFileRemove(event, index)}
-                      className="group hover:bg-main active:scale-[0.95] absolute top-2 right-2 bg-[#41403C] rounded-full p-3 cursor-pointer"
-                    >
-                      <TrashIcon
-                        size={21}
-                        color="#fff"
-                        className="group-hover:fill-text-black"
-                      />
-                    </div>
-                  </motion.div>
+                    file={file}
+                    index={index}
+                    onRemove={handleFileRemove}
+                  />
                 ))}
+                {/* --- ▲▲▲ 수정된 부분 (1) ▲▲▲ --- */}
               </div>
             </AnimatePresence>
           )}
@@ -185,38 +302,19 @@ export default function StepOnePage() {
       <h2 className="label_14l mt-[3rem] mb-[2rem]">
         생각나는 이미지가 없다면 가이드 이미지를 선택해 보세요 .
       </h2>
-      <div className="mb-20 max-w-[1100px] flex flex-wrap justify-start items-center gap-4">
+      <div className="mb-20 pb-10 custom-scrollbar-x max-w-[1100px] h-[22rem] overflow-x-scroll overflow-y-hidden flex justify-start items-center gap-4">
+        {/* --- ▼▼▼ 수정된 부분 (2) ▼▼▼ --- */}
         {guideImages.map((image, index) => (
-          <button
-            onClick={() => setSelectedGuide(image.id)}
-            disabled={files.length > 0}
-            className={`group transition-all duration-300 ease-out relative w-[18rem] h-[18rem] border-border-gray border-1 basic-shadow ${
-              files.length > 0
-                ? "grayscale-100 opacity-50 cursor-not-allowed"
-                : "hover:border-border-pink active:scale-95 cursor-pointer"
-            }`}
+          <GuideImageItem
             key={index}
-          >
-            <img
-              className="object-cover w-full h-full"
-              src={image.thumb_url}
-              alt={`guide-${index}`}
-            />
-            {selectedGuide === image.id ? (
-              <div
-                className={`absolute w-full h-full inset-0 [background:var(--gradient-main)] ${
-                  files.length > 0 ? "" : "group-hover:opacity-100"
-                }`}
-              ></div>
-            ) : (
-              <div
-                className={`opacity-0 transition-all duration-300 ease-out absolute w-full h-full inset-0 [background:var(--gradient-main)] ${
-                  files.length > 0 ? "" : "group-hover:opacity-100"
-                }`}
-              ></div>
-            )}
-          </button>
+            image={image}
+            index={index}
+            selectedGuide={selectedGuide}
+            filesLength={files.length}
+            onSelect={setSelectedGuide}
+          />
         ))}
+        {/* --- ▲▲▲ 수정된 부분 (2) ▲▲▲ --- */}
       </div>
       <button
         // disabled={

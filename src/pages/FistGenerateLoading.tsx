@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useStep } from "../context/StepContext";
 import ProgressBar from "@ramonak/react-progress-bar";
 import "./FistGenerateLoading.css";
+import GameCanvas from "../components/GameCanvas";
 
 export default function FirstGenerateLoading() {
   const [loading, setLoading] = useState(true);
@@ -12,6 +13,7 @@ export default function FirstGenerateLoading() {
     initImage,
     conditionImages,
     conceptImages,
+    generateParams,
     setPreviewImageFiles,
   } = useStep();
 
@@ -36,6 +38,9 @@ export default function FirstGenerateLoading() {
       Array.from(conditionImages).forEach((f) =>
         formData.append("condition_images", f)
       );
+      Object.entries(generateParams).forEach(([key, value]) => {
+        formData.append(key, value.toString());
+      });
 
       console.log("🚀 스트림 수신 시작...");
 
@@ -161,10 +166,11 @@ export default function FirstGenerateLoading() {
             borderRadius="50px"
             bgColor="pink"
             className="w-[40vw]"
-            completed={Math.floor((sendFiles.length / 6 + 0.05) * 100)}
+            completed={Math.floor((sendFiles.length / 6 + 0.15) * 100)}
             animateOnRender={true}
             labelColor="black"
           />
+          <GameCanvas />
         </div>
       ) : (
         <p>생성 완료! 다음 단계로 이동합니다.</p>

@@ -14,6 +14,7 @@ export default function MaskGenerateLoading() {
     selectedImageFile,
     conditionImages,
     initImage,
+    inpaintParams,
     setPreviewImageFiles,
     setCurrentStep,
   } = useStep();
@@ -62,7 +63,9 @@ export default function MaskGenerateLoading() {
       for (const file of conditionImages)
         formData.append("condition_images", file);
       //   formData.append("selected_image", selectedImageFile);
-
+      Object.entries(inpaintParams).forEach(([key, value]) => {
+        formData.append(key, value.toString());
+      });
       for (const [key, value] of formData.entries()) {
         if (value instanceof File) {
           console.log(
@@ -192,7 +195,7 @@ export default function MaskGenerateLoading() {
             borderRadius="50px"
             bgColor="pink"
             className="w-[40vw]"
-            completed={Math.floor((sendFiles.length / 3 + 0.05) * 100)}
+            completed={Math.floor((sendFiles.length / 3 + 0.32) * 100)}
             animateOnRender={true}
             labelColor="black"
           />

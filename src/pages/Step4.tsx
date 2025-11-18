@@ -6,12 +6,13 @@ import {
   TrashIcon,
 } from "@phosphor-icons/react";
 import Canvas, { CanvasHandle } from "../components/Make/Canvas";
-import { useStep } from "../context/StepContext";
+import { InpaintParams, useStep } from "../context/StepContext";
 import { useEffect, useRef, useState } from "react";
 import { db, storage } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { AnimatePresence, motion } from "motion/react";
 import { doc, setDoc } from "firebase/firestore";
+import InpaintModal from "../components/inpaint/InpaintModal";
 
 function triggerDownload(url: string, filename: string) {
   const link = document.createElement("a");
@@ -31,6 +32,7 @@ export default function StepFourPage() {
     setInpaintConceptImages,
     setSelectedImageFile,
     selectedImageFile,
+    setInpaintParams,
     setPrompt,
     setMaskImage,
     setCurrentStep,
@@ -48,6 +50,7 @@ export default function StepFourPage() {
   const canvasHandleRef = useRef<CanvasHandle | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [files, setFiles] = useState<File[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     setSelectedImageUrl(
@@ -66,7 +69,7 @@ export default function StepFourPage() {
     );
   };
 
-  async function handleMakeNewVersion() {
+  async function handleMakeNewVersion(params: InpaintParams) {
     setPrompt(textAreaContent);
     const maskBlob = await canvasHandleRef.current?.exportAsFile();
     if (maskBlob) {
@@ -78,10 +81,15 @@ export default function StepFourPage() {
       const dataTransfer = new DataTransfer();
       files.forEach((file) => dataTransfer.items.add(file));
       setInpaintConceptImages(dataTransfer.files);
+      setInpaintParams(params);
       setCurrentStep(4.5);
     } else {
       console.error("❌ 마스크 이미지 생성 실패");
     }
+  }
+
+  function onNewVersionClick() {
+    setModalOpen(true);
   }
 
   // ✨ 5. 'maskFile'을 다운로드하는 함수 (항상 PNG)
@@ -341,7 +349,7 @@ export default function StepFourPage() {
             </div>
           </div>
           <button
-            onClick={handleMakeNewVersion}
+            onClick={onNewVersionClick}
             className="mt-10 cursor-pointer label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-1"
           >
             Make New Version →
@@ -388,6 +396,12 @@ export default function StepFourPage() {
           </button>
         </div>
       </div>
+      {modalOpen && (
+        <InpaintModal
+          onClose={() => setModalOpen(false)}
+          onConfirm={handleMakeNewVersion}
+        />
+      )}
     </div>
   );
 }

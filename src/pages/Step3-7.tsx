@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useStep } from "../context/StepContext";
-
 const getRadiusByWidth = (width: number) => {
   if (width >= 1960) {
-    return 40;
+    return 50;
   } else if (width >= 1024) {
     // 1024px 이상 (데스크탑)
-    return 23;
+    return 25;
   } else if (width >= 768) {
     // 768px ~ 1023px (태블릿)
     return 20;
@@ -16,10 +15,26 @@ const getRadiusByWidth = (width: number) => {
   }
 };
 
+const getWidthByWidth = (width: number) => {
+  if (width >= 1960) {
+    return 35;
+  } else if (width >= 1024) {
+    // 1024px 이상 (데스크탑)
+    return 18;
+  } else if (width >= 768) {
+    // 768px ~ 1023px (태블릿)
+    return 18;
+  } else {
+    // 768px 미만 (모바일)
+    return 12;
+  }
+};
+
 export default function StepThreeSevenPage() {
   const letters = ["A", "B", "C"];
   const itemCount = 3;
   const [radiusRem, setRadiusRem] = useState(25);
+  const [widthRem, setWidthRem] = useState(25);
   const [urls, setUrls] = useState<string[]>([]);
   const [selectedUrl, setSelectedUrl] = useState<number | null>(null);
 
@@ -52,6 +67,7 @@ export default function StepThreeSevenPage() {
   useEffect(() => {
     const handleResize = () => {
       setRadiusRem(getRadiusByWidth(window.innerWidth));
+      setWidthRem(getWidthByWidth(window.innerWidth));
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -77,7 +93,7 @@ export default function StepThreeSevenPage() {
             radiusRem * 12
           )}px)`,
         }}
-        className={`absolute top-1/2 left-1/2 flex flex-col justify-center items-start gap-1`}
+        className={`w-[30rem] absolute top-1/2 left-1/2 flex flex-col justify-center items-start gap-1`}
       >
         <h1 className="heading_20b">STEP 3. Choose One Favorite Result</h1>
         <h2 className="label_14l">
@@ -86,30 +102,34 @@ export default function StepThreeSevenPage() {
       </div>
 
       {urls.map((url, index) => {
-        const angleDeg = (360 / itemCount) * index;
+        const angleDeg = (180 / itemCount) * index + 210;
         const xPos = `calc(-50% + ${radiusRem}rem * cos(${angleDeg}deg))`;
         const yPos = `calc(-50% + ${radiusRem}rem * sin(${angleDeg}deg))`;
 
         return (
           <div
-            onClick={() => setSelectedUrl(index)}
+            onClick={() => setSelectedUrl(Number(index + 1))}
             key={index}
             style={{
               translate: `${xPos} ${yPos}`,
+              width: `${widthRem}rem`,
+              height: `${widthRem}rem`,
             }}
-            className="group cursor-pointer absolute top-1/2 left-1/2 w-[18rem] h-[18rem]"
+            className={`group cursor-pointer absolute top-2/3 left-1/2`}
           >
             <div
-              className={`opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out absolute w-[170%] h-[170%] top-[-20%] left-[-30%] radial-gradient ${
-                selectedUrl === index ? "opacity-100" : ""
+              className={`opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out absolute w-[150%] h-[150%] top-[-20%] left-[-30%] radial-gradient ${
+                selectedUrl === index + 1 ? "opacity-100" : ""
               }`}
             ></div>
             <div
-              className={`z-10 absolute top-8 left-1 w-[3.5rem] h-[3.5rem] rounded-full bg-white flex justify-center items-center text-text-black border-1 border-text-black group-hover:[background:var(--gradient-main)] ${
-                selectedUrl === index ? "[background:var(--gradient-noop)]" : ""
+              className={`z-10 absolute top-8 left-8 w-[3.5rem] h-[3.5rem] rounded-full bg-white flex justify-center items-center text-text-black border-1 border-text-black group-hover:[background:var(--gradient-main)] ${
+                selectedUrl === index + 1
+                  ? "[background:var(--gradient-noop)]"
+                  : ""
               }`}
             >
-              <span className="text-[2rem] font-bold h-[2.5rem]">
+              <span className="text-[2rem] font-bold h-[2.9rem]">
                 {letters[index]}
               </span>
             </div>
@@ -124,7 +144,7 @@ export default function StepThreeSevenPage() {
 
       <button
         onClick={handleSubmit}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-10 cursor-pointer label_17m w-[20rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:-translate-y-9"
+        className="absolute top-2/3 left-1/2 -translate-x-1/2 -translate-y-10 cursor-pointer label_17m w-[20rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:-translate-y-9"
       >
         Next Step
       </button>

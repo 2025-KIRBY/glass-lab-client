@@ -6,6 +6,7 @@ import FirstGenerateLoading from "./pages/FistGenerateLoading";
 import StepFourPage from "./pages/Step4";
 import StepThreePage from "./pages/Step3";
 import GalleryPage from "./pages/Gallery";
+import MaskGenerateLoading from "./pages/MaskGenerateLoading";
 
 const routes = [
   {
@@ -23,6 +24,10 @@ const routes = [
       {
         path: "/loading",
         element: <FirstGenerateLoading />,
+      },
+      {
+        path: "/loading2",
+        element: <MaskGenerateLoading />,
       },
       {
         path: "/test/4",

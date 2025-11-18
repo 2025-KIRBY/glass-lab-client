@@ -1,0 +1,133 @@
+@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* background-color: #ffdee9; */
+  /* background-image: linear-gradient(0deg, #ffdee9 0%, #b5fffc 100%); */
+  font-family: "Jua", sans-serif;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}
+
+.game-wrapper {
+  position: relative;
+  width: 600px;
+  max-width: 100%;
+  height: 60vh;
+  max-height: 800px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer; /* 마우스 커서 표시 */
+}
+
+.ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24px;
+  color: #333;
+  text-shadow: 2px 2px 0px #fff;
+}
+
+.hearts {
+  color: #ff4757;
+}
+
+.center-msg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  pointer-events: auto; /* 메시지 박스 클릭 허용 */
+}
+
+.title {
+  font-size: 40px;
+  color: #333;
+  margin-bottom: 10px;
+  text-shadow: 3px 3px 0px #fff;
+}
+
+.sub-text {
+  font-size: 18px;
+  color: #555;
+  animation: blink 1.5s infinite;
+}
+
+button.btn-start {
+  pointer-events: auto;
+  background: #333;
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  font-size: 20px;
+  font-family: "Jua", sans-serif;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s;
+  touch-action: manipulation; /* 더블탭 줌 방지 */
+}
+
+button.btn-start:active {
+  transform: scale(0.95);
+}
+
+.mobile-controls {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.4);
+  display: none;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-controls {
+    display: block;
+  }
+  .game-wrapper {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+}

@@ -1,6 +1,26 @@
 import { createContext, useContext, useState } from "react";
 
+export interface GenerateParams {
+  init_image_weight: number;
+  concept_images_weight: number;
+  condition_images_weight: number;
+  controlnet_condition_scale: number;
+  control_guidance_end: number;
+}
+
+export interface InpaintParams {
+  init_image_weight: number;
+  new_concept_images_weight: number;
+  condition_images_weight: number;
+  controlnet_condition_scale: number;
+  control_guidance_end: number;
+}
+
 type StepContextType = {
+  generateParams: GenerateParams;
+  setGenerateParams: (params: GenerateParams) => void;
+  inpaintParams: InpaintParams;
+  setInpaintParams: (params: InpaintParams) => void;
   currentStep: number;
   setCurrentStep: (step: number) => void;
   initImage: File | null;
@@ -31,6 +51,20 @@ type StepContextType = {
 export const StepContext = createContext<StepContextType | null>(null);
 
 export function StepProvider({ children }: { children: React.ReactNode }) {
+  const [generateParams, setGenerateParams] = useState<GenerateParams>({
+    init_image_weight: 0,
+    concept_images_weight: 0,
+    condition_images_weight: 0,
+    controlnet_condition_scale: 0,
+    control_guidance_end: 0,
+  });
+  const [inpaintParams, setInpaintParams] = useState<InpaintParams>({
+    init_image_weight: 0,
+    new_concept_images_weight: 0,
+    condition_images_weight: 0,
+    controlnet_condition_scale: 0,
+    control_guidance_end: 0,
+  });
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [initImage, setInitImage] = useState<File | null>(null);
   const [initId, setInitId] = useState<number | null>(null);
@@ -65,6 +99,10 @@ export function StepProvider({ children }: { children: React.ReactNode }) {
   return (
     <StepContext.Provider
       value={{
+        generateParams,
+        setGenerateParams,
+        inpaintParams,
+        setInpaintParams,
         currentStep,
         setCurrentStep,
         initImage,
