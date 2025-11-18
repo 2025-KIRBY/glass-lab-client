@@ -1,0 +1,23 @@
+.wrapper {
+  width: 40vw;
+  border-radius: 50px;
+  background-color: rgb(211, 211, 211) 4;
+}
+
+.container {
+  border-radius: 50px;
+}
+
+.barCompleted {
+  /* background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 206, 236, 0.74) 71%,
+    var(--pink-300) 100%
+  ); */
+}
+
+.label {
+  font-size: 20px;
+  color: green;
+}

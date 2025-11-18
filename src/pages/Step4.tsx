@@ -375,9 +375,9 @@ export default function StepFourPage() {
               >
                 .glb
               </span> */}
-              <span className="absolute -bottom-10 right-0 label_12m tracking-[0] text-text-gray">
+              {/* <span className="absolute -bottom-10 right-0 label_12m tracking-[0] text-text-gray">
                 .glb 파일 export 시 시간이 소요됩니다.
-              </span>
+              </span> */}
             </div>
           </div>
           <button

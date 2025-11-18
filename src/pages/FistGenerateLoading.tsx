@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useStep } from "../context/StepContext";
+import ProgressBar from "@ramonak/react-progress-bar";
+import "./FistGenerateLoading.css";
 
 export default function FirstGenerateLoading() {
   const [loading, setLoading] = useState(true);
@@ -38,11 +40,12 @@ export default function FirstGenerateLoading() {
       console.log("🚀 스트림 수신 시작...");
 
       const response = await fetch(
-        "https://exdjgmvhy6anjk-8000.proxy.runpod.net/generate",
+        "https://q7o04xwntbb5pp-8000.proxy.runpod.net/generate",
         { method: "POST", body: formData }
       );
 
       const contentType = response.headers.get("Content-Type");
+      console.log("📌 응답 Content-Type:", contentType);
       if (!contentType) throw new Error("Content-Type 없음");
 
       const boundaryMatch = contentType.match(/boundary=([^;]+)/);
@@ -151,9 +154,17 @@ export default function FirstGenerateLoading() {
   return (
     <div>
       {loading ? (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-20">
           <p className="heading_20b">이미지 생성 중...</p>
-          <img src="/loading.svg" alt="loading" />
+          {/* <img src="/loading.svg" alt="loading" /> */}
+          <ProgressBar
+            borderRadius="50px"
+            bgColor="pink"
+            className="w-[40vw]"
+            completed={Math.floor((sendFiles.length / 6 + 0.05) * 100)}
+            animateOnRender={true}
+            labelColor="black"
+          />
         </div>
       ) : (
         <p>생성 완료! 다음 단계로 이동합니다.</p>

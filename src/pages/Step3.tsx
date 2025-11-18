@@ -6,7 +6,7 @@ const getRadiusByWidth = (width: number) => {
     return 40;
   } else if (width >= 1024) {
     // 1024px 이상 (데스크탑)
-    return 23;
+    return 25;
   } else if (width >= 768) {
     // 768px ~ 1023px (태블릿)
     return 20;
@@ -17,7 +17,7 @@ const getRadiusByWidth = (width: number) => {
 };
 
 export default function StepThreePage() {
-  const letters = ["A", "B", "C", "D", "E", "F"];
+  const letters = ["C", "D", "E", "F", "A", "B"];
   const itemCount = 6;
   const [radiusRem, setRadiusRem] = useState(25);
   const [urls, setUrls] = useState<string[]>([]);
@@ -65,7 +65,7 @@ export default function StepThreePage() {
       console.error("❌ 파일이 선택되지 않았습니다.");
       return;
     }
-    setSelectedImageFile(previewImageFiles[Number(selectedUrl)]);
+    setSelectedImageFile(previewImageFiles[Number(selectedUrl) - 1]);
     setCurrentStep(4);
   };
 
@@ -92,7 +92,7 @@ export default function StepThreePage() {
 
         return (
           <div
-            onClick={() => setSelectedUrl(index)}
+            onClick={() => setSelectedUrl(Number(index + 1))}
             key={index}
             style={{
               translate: `${xPos} ${yPos}`,
@@ -101,12 +101,14 @@ export default function StepThreePage() {
           >
             <div
               className={`opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out absolute w-[170%] h-[170%] top-[-20%] left-[-30%] radial-gradient ${
-                selectedUrl === index ? "opacity-100" : ""
+                selectedUrl === index + 1 ? "opacity-100" : ""
               }`}
             ></div>
             <div
               className={`z-10 absolute top-8 left-1 w-[3.5rem] h-[3.5rem] rounded-full bg-white flex justify-center items-center text-text-black border-1 border-text-black group-hover:[background:var(--gradient-main)] ${
-                selectedUrl === index ? "[background:var(--gradient-noop)]" : ""
+                selectedUrl === index + 1
+                  ? "[background:var(--gradient-noop)]"
+                  : ""
               }`}
             >
               <span className="text-[2rem] font-bold h-[2.5rem]">

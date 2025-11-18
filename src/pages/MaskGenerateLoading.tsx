@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useStep } from "../context/StepContext";
-import axios from "axios";
-import JSZip from "jszip";
+import ProgressBar from "@ramonak/react-progress-bar";
 
 export default function MaskGenerateLoading() {
   const [loading, setLoading] = useState(true);
+  const [sendFiles, setSendFiles] = useState<File[]>([]);
+
   const {
     prompt,
     maskImage,
@@ -34,7 +35,8 @@ export default function MaskGenerateLoading() {
       console.log(prompt);
       console.log(selectedImageFile);
       console.log(maskImage);
-      console.log(conceptImages);
+      console.log("콘셉트 이미지:", conceptImages);
+      console.log("콘셉트 이미지:", inpaintConceptImages);
       console.log(conditionImages);
       const fixedFile =
         selectedImageFile.type === ""
@@ -44,14 +46,16 @@ export default function MaskGenerateLoading() {
           : selectedImageFile;
 
       const formData = new FormData();
-      formData.append("prompt", "glasses");
+      // formData.append("prompt", "glasses");
       formData.append("init_image", fixedFile);
       formData.append("mask_image", maskImage);
-      if (inpaintConceptImages) {
+      if (inpaintConceptImages!.length > 0) {
         console.log("🎉inpaint concept 존재!");
-        for (const file of inpaintConceptImages)
+        for (const file of inpaintConceptImages!)
           formData.append("new_concept_images", file);
       } else {
+        console.log("🎉inpaint concept 안존재!");
+
         for (const file of conceptImages)
           formData.append("new_concept_images", file);
       }
@@ -72,11 +76,12 @@ export default function MaskGenerateLoading() {
       console.log("🚀 스트림 수신 시작...");
 
       const response = await fetch(
-        "https://exdjgmvhy6anjk-8000.proxy.runpod.net/generate",
+        "https://q7o04xwntbb5pp-8000.proxy.runpod.net/inpaint",
         { method: "POST", body: formData }
       );
 
       const contentType = response.headers.get("Content-Type");
+      console.log("📌 응답 Content-Type:", contentType);
       if (!contentType) throw new Error("Content-Type 없음");
 
       const boundaryMatch = contentType.match(/boundary=([^;]+)/);
@@ -113,6 +118,7 @@ export default function MaskGenerateLoading() {
 
           const file = extractFileFromPart(part);
           if (file) files.push(file);
+          setSendFiles([...files]);
 
           pos = indexOfBytes(buffer, boundaryBytes);
         }
@@ -127,7 +133,9 @@ export default function MaskGenerateLoading() {
       console.error("❌ Inpaint 요청 실패:", err);
     }
   }
-
+  useEffect(() => {
+    console.log("🚀전송할 파일들:", sendFiles);
+  }, [sendFiles]);
   /**
    * Uint8Array 안에 boundary(Uint8Array) 존재 위치 찾기
    */
@@ -178,10 +186,17 @@ export default function MaskGenerateLoading() {
   return (
     <div>
       {loading ? (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-20">
           <p className="heading_20b">새로운 이미지 생성 중...</p>
-          <img className="" src="/loading.svg" alt="" />
-          {/* <button onClick={() => setCurrentStep(4)}>button</button> */}
+          <ProgressBar
+            borderRadius="50px"
+            bgColor="pink"
+            className="w-[40vw]"
+            completed={Math.floor((sendFiles.length / 3 + 0.05) * 100)}
+            animateOnRender={true}
+            labelColor="black"
+          />
+          <button onClick={() => setCurrentStep(4)}>button</button>
         </div>
       ) : (
         <p>생성 완료! 다음 단계로 이동합니다.</p>

@@ -1,6 +1,7 @@
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useEffect, useState } from "react";
+import GalleryItem from "../components/gallery/galleryItem";
 
 interface GalleryImageType {
   frame_id: number;
@@ -34,16 +35,7 @@ export default function GalleryPage() {
       </div>
       <div className="w-full grid grid-cols-8 border-t-1 border-text-black">
         {galleryImages.map((image, index) => (
-          <div key={index} className="w-full pt-5 flex flex-col">
-            <span className="label_17r text-text-gray500 font-[300]">
-              #{index + 1}
-            </span>
-            <img
-              className="w-full object-contain"
-              src={image.image_url}
-              alt=""
-            />
-          </div>
+          <GalleryItem key={index} image={image} index={index} />
         ))}
       </div>
     </div>

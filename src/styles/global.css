@@ -20,9 +20,12 @@ html {
   --gray-800: #282828;
   --gray-500: #5b5b5b;
   --gray-300: #8f8b8b;
+  --neutral-10: #dfdfdf;
 }
 
 @theme {
+  --color-surface-skeleton: var(--neutral-10);
+
   --font-inria-sans: "Inria-Sans", sans-serif;
   --font-pretendard: "Pretendard", sans-serif;
 
@@ -61,6 +64,13 @@ html {
 }
 
 @layer components {
+  .skeleton {
+    @apply bg-surface-skeleton;
+    animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation-iteration-count: 3;
+    animation-delay: 1s;
+  }
+
   .heading_20b {
     @apply font-inria-sans text-[2rem] text-text-black font-[700] tracking-[-1px];
   }
