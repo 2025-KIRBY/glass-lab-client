@@ -7,6 +7,7 @@ import StepFourPage from "./Step4";
 import FirstGenerateLoading from "./FistGenerateLoading";
 import MaskGenerateLoading from "./MaskGenerateLoading";
 import StepThreeSevenPage from "./Step3-7";
+import StepFivePage from "./Step5";
 
 export default function MakePage() {
   const { currentStep, setCurrentStep } = useStep();
@@ -30,5 +31,7 @@ export default function MakePage() {
     return <StepThreeSevenPage />;
   } else if (currentStep === 4.5) {
     return <MaskGenerateLoading />;
+  } else if (currentStep === 5) {
+    return <StepFivePage />;
   }
 }

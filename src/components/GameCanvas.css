@@ -17,8 +17,8 @@ body {
 
 .game-wrapper {
   position: relative;
-  width: 600px;
-  max-width: 100%;
+  width: 800px;
+  max-width: 800px;
   height: 60vh;
   max-height: 800px;
   background: rgba(255, 255, 255, 0.6);

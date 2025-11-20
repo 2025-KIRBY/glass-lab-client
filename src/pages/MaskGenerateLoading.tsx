@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useStep } from "../context/StepContext";
 import ProgressBar from "@ramonak/react-progress-bar";
+import GameCanvas from "../components/GameCanvas";
 
 export default function MaskGenerateLoading() {
   const [loading, setLoading] = useState(true);
@@ -199,10 +200,11 @@ export default function MaskGenerateLoading() {
             animateOnRender={true}
             labelColor="black"
           />
-          <button onClick={() => setCurrentStep(4)}>button</button>
+          {/* <button onClick={() => setCurrentStep(4)}>button</button> */}
+          <GameCanvas />
         </div>
       ) : (
-        <p>생성 완료! 다음 단계로 이동합니다.</p>
+        <p></p>
       )}
     </div>
   );

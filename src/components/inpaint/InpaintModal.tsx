@@ -113,16 +113,16 @@ export default function InpaintModal({
         <div className="flex w-full border-t border-gray-200">
           <button
             onClick={onClose}
-            className="cursor-pointer flex-1 py-6 text-lg font-medium text-text-gray500 hover:bg-gray-50 transition-colors"
+            className="cursor-pointer flex-1 py-6 text-[1.3rem] font-medium text-text-gray500 hover:bg-gray-50 transition-colors"
           >
             아니요
           </button>
           <div className="w-[1px] bg-gray-200"></div>
           <button
             onClick={() => onConfirm(params)}
-            className="cursor-pointer flex-1 py-6 text-lg font-bold text-main hover:bg-pink-50 transition-colors"
+            className="cursor-pointer flex-1 py-6 text-[1.3rem] font-bold text-border-pink hover:bg-pink-50 transition-colors"
           >
-            예
+            생성
           </button>
         </div>
       </motion.div>

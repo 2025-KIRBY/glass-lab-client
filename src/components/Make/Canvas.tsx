@@ -45,6 +45,7 @@ const Canvas = forwardRef<CanvasHandle, CanvasProps>(
         const context = canvas.getContext("2d");
         if (context) {
           context.lineCap = "round"; // 기본 설정
+          context.lineJoin = "round";
           contextRef.current = context;
           setCtx(context); // 👈 State에 context 저장
           console.log(
@@ -58,22 +59,24 @@ const Canvas = forwardRef<CanvasHandle, CanvasProps>(
     // 이 Effect는 'wandStep' 또는 'ctx'가 변경될 때만 실행됩니다.
     useEffect(() => {
       if (!ctx) return;
+      ctx.lineCap = "round"; // 기존
+      ctx.lineJoin = "round"; // 추가!!  ←✨✨✨✨
 
       switch (wandStep) {
         case 0: // 👈 wandStep가 0일 때 (기본값)
           ctx.globalCompositeOperation = "source-over";
           ctx.strokeStyle = BRUSH_COLOR;
-          ctx.lineWidth = 50;
+          ctx.lineWidth = 65;
           break;
         case 1:
           ctx.globalCompositeOperation = "source-over";
           ctx.strokeStyle = BRUSH_COLOR;
-          ctx.lineWidth = 27;
+          ctx.lineWidth = 40;
           break;
         case 2:
           ctx.globalCompositeOperation = "source-over";
           ctx.strokeStyle = BRUSH_COLOR;
-          ctx.lineWidth = 15;
+          ctx.lineWidth = 27;
           break;
         case 3:
           ctx.globalCompositeOperation = "destination-out";

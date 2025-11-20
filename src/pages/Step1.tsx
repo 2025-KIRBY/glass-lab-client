@@ -256,11 +256,13 @@ export default function StepOnePage() {
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center gap-4">
-      <div className="w-full flex flex-col justify-center items-start gap-1 px-[0%]">
-        <h1 className="heading_20b font-[600] text-text-black">
+      <div className="w-full flex flex-col justify-center items-start gap-1 px-[10%]">
+        <h1 className="heading_20b font-[600] text-text-black text-[1.3vw]">
           STEP 1. What's your Mood?
         </h1>
-        <h2 className="label_14l">취향의 이미지를 두 개 이상 넣어주세요 .</h2>
+        <h2 className="label_14l text-[1vw]">
+          취향의 이미지를 두 개 이상 넣어주세요 .
+        </h2>
       </div>
       <div className="min-w-[60vw] max-w-[90vw] flex flex-col justify-center items-start gap-4">
         <input
@@ -302,7 +304,7 @@ export default function StepOnePage() {
       <h2 className="label_14l mt-[3rem] mb-[2rem]">
         생각나는 이미지가 없다면 가이드 이미지를 선택해 보세요 .
       </h2>
-      <div className="mb-20 pb-10 custom-scrollbar-x max-w-[1100px] h-[22rem] overflow-x-scroll overflow-y-hidden flex justify-start items-center gap-4">
+      <div className="mb-20 pb-10 custom-scrollbar-x max-w-[1100px] h-[22rem] overflow-x-scroll overflow-y-hidden flex justify-start items-center gap-2">
         {/* --- ▼▼▼ 수정된 부분 (2) ▼▼▼ --- */}
         {guideImages.map((image, index) => (
           <GuideImageItem

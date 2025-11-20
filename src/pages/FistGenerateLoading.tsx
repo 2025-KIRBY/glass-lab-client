@@ -173,7 +173,7 @@ export default function FirstGenerateLoading() {
           <GameCanvas />
         </div>
       ) : (
-        <p>생성 완료! 다음 단계로 이동합니다.</p>
+        <p></p>
       )}
     </div>
   );

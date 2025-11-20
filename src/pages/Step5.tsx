@@ -26,7 +26,7 @@ function triggerDownload(url: string, filename: string) {
 // ✨ 1. 다운로드 형식을 저장할 타입과 state 추가
 type DownloadFormat = "png" | "jpg" | "glb";
 
-export default function StepFourPage() {
+export default function StepFivePage() {
   const {
     initImage,
     setInpaintConceptImages,
@@ -215,7 +215,7 @@ export default function StepFourPage() {
     <div className="w-screen h-screen grid grid-cols-[1fr_500px] pt-[8.2rem] border-border-gray">
       <div className="relative w-full border-t-1 border-r-1 flex justify-center items-center">
         <button
-          onClick={() => setCurrentStep(3)}
+          onClick={() => setCurrentStep(3.7)}
           className="flex items-center justify-center absolute top-[2rem] left-[2rem] label_17m w-[5rem] h-[4.5rem] border-1 border-text-gray [background:var(--gradient-button)] cursor-pointer"
         >
           <CaretLeftIcon size={25} color="#8f8b8b" />

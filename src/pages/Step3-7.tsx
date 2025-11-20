@@ -81,8 +81,8 @@ export default function StepThreeSevenPage() {
       console.error("❌ 파일이 선택되지 않았습니다.");
       return;
     }
-    setSelectedImageFile(previewImageFiles[Number(selectedUrl)]);
-    setCurrentStep(4);
+    setSelectedImageFile(previewImageFiles[Number(selectedUrl) - 1]);
+    setCurrentStep(5);
   };
 
   return (

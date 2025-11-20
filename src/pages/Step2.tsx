@@ -173,9 +173,9 @@ export default function StepTwoPage() {
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center gap-4">
-      <div className="w-full flex flex-col justify-center items-start gap-1 px-[0%] mb-[5rem]">
-        <h1 className="heading_20b">STEP 2. Choose your Frame</h1>
-        <h2 className="label_14l">
+      <div className="w-full flex flex-col justify-center items-start gap-1 px-[10%] mb-[5rem]">
+        <h1 className="heading_20b text-[1.3vw]">STEP 2. Choose your Frame</h1>
+        <h2 className="label_14l text-[1vw]">
           참고하고 싶은 안경 프레임을 선택해 주세요 .
         </h2>
       </div>
