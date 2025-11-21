@@ -189,7 +189,7 @@ export default function StepFourPage() {
         });
 
         console.log("✅ Firestore 저장 완료:", newId);
-        // alert("이미지가 Firebase Storage + Firestore 저장 완료되었습니다!");
+        alert("갤러리 저장 완료");
       } catch (error) {
         console.error("❌ Firebase 업로드 실패:", error);
       }

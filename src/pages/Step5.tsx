@@ -36,6 +36,8 @@ export default function StepFivePage() {
     setPrompt,
     setMaskImage,
     setCurrentStep,
+    initId,
+    conceptId,
   } = useStep();
   const [wandStep, setWandStep] = useState<number | null>(0);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
@@ -179,6 +181,8 @@ export default function StepFivePage() {
         await setDoc(doc(db, "gallery", newId), {
           id: newId,
           image_url: downloadURL,
+          frame_id: initId,
+          concept_id: conceptId,
           created_at: new Date().toISOString(),
         });
 

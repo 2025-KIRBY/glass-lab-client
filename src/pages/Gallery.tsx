@@ -114,7 +114,7 @@ export default function GalleryPage() {
                     src={selectedImage.image_url}
                     alt=""
                   />
-                  <div className="bg-white/0 backdrop-blur-xl font-inria-sans flex flex-col gap-10 justify-center items-start p-3 w-full h-full">
+                  <div className="bg-white/0 font-inria-sans flex flex-col gap-10 justify-center items-start p-3 w-full h-full">
                     <span className="flex items-center gap-10 justify-center">
                       <p className="text-gray-400 text-[0.8vw] tracking-tighter">
                         | CREATED TIME

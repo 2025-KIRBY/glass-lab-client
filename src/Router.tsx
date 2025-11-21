@@ -41,6 +41,19 @@ const routes = [
         path: "/gallery",
         element: <GalleryPage />,
       },
+      {
+        path: "hid",
+        children: [
+          {
+            path: "gallery",
+            element: <GalleryPage />,
+          },
+          {
+            path: "home",
+            element: <MainPage />,
+          },
+        ],
+      },
     ],
   },
 ];

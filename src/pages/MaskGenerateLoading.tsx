@@ -3,6 +3,8 @@ import { useStep } from "../context/StepContext";
 import ProgressBar from "@ramonak/react-progress-bar";
 import GameCanvas from "../components/GameCanvas";
 import LeaderBoard from "../components/loading/LeaderBoard";
+import DinoGame from "../components/DinoGame";
+import LeaderBoard2 from "../components/loading/LeaderBoard2";
 
 export default function MaskGenerateLoading() {
   const [loading, setLoading] = useState(true);
@@ -202,8 +204,12 @@ export default function MaskGenerateLoading() {
             labelColor="black"
           />
           {/* <button onClick={() => setCurrentStep(4)}>button</button> */}
-          <GameCanvas />
-          <LeaderBoard />
+          {/* <GameCanvas />
+          <LeaderBoard /> */}
+          <div className="flex gap-10">
+            <DinoGame />
+            <LeaderBoard2 />
+          </div>
         </div>
       ) : (
         <p></p>

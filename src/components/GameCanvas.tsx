@@ -5,14 +5,6 @@ import { db } from "../../firebase";
 // npm install firebase 명령어로 설치가 필요합니다.
 import { serverTimestamp, setDoc, doc } from "firebase/firestore";
 
-const firebaseConfig = {
-  // 여기에 Firebase 콘솔에서 복사한 설정값을 넣으세요.
-  // apiKey: "...",
-  // authDomain: "...",
-  // projectId: "...",
-  // ...
-};
-
 // 앱 초기화 (설정이 비어있으면 에러가 날 수 있으니 try-catch로 감싸거나 설정을 꼭 채워주세요)
 // ▲▲▲ Firebase 설정 끝 ▲▲▲
 
@@ -202,7 +194,7 @@ export default function GameCanvas() {
     };
 
     framesRef.current++;
-    if (framesRef.current % 600 === 0) gameSpeedRef.current += 0.1;
+    if (framesRef.current % 600 === 0) gameSpeedRef.current += 0.3;
 
     spawnTimerRef.current++;
     let spawnRate = 60 - Math.floor(gameSpeedRef.current * 2);
