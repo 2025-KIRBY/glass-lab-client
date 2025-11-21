@@ -17,6 +17,8 @@ export interface InpaintParams {
 }
 
 type StepContextType = {
+  conceptId: number | null;
+  setConceptId: (id: number | null) => void;
   generateParams: GenerateParams;
   setGenerateParams: (params: GenerateParams) => void;
   inpaintParams: InpaintParams;
@@ -51,6 +53,7 @@ type StepContextType = {
 export const StepContext = createContext<StepContextType | null>(null);
 
 export function StepProvider({ children }: { children: React.ReactNode }) {
+  const [conceptId, setConceptId] = useState<number | null>(null);
   const [generateParams, setGenerateParams] = useState<GenerateParams>({
     init_image_weight: 0,
     concept_images_weight: 0,
@@ -99,6 +102,8 @@ export function StepProvider({ children }: { children: React.ReactNode }) {
   return (
     <StepContext.Provider
       value={{
+        conceptId,
+        setConceptId,
         generateParams,
         setGenerateParams,
         inpaintParams,

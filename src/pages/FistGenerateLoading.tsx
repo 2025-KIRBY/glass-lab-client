@@ -3,6 +3,7 @@ import { useStep } from "../context/StepContext";
 import ProgressBar from "@ramonak/react-progress-bar";
 import "./FistGenerateLoading.css";
 import GameCanvas from "../components/GameCanvas";
+import LeaderBoard from "../components/loading/LeaderBoard";
 
 export default function FirstGenerateLoading() {
   const [loading, setLoading] = useState(true);
@@ -171,6 +172,7 @@ export default function FirstGenerateLoading() {
             labelColor="black"
           />
           <GameCanvas />
+          <LeaderBoard />
         </div>
       ) : (
         <p></p>

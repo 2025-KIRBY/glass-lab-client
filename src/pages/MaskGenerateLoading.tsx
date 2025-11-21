@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useStep } from "../context/StepContext";
 import ProgressBar from "@ramonak/react-progress-bar";
 import GameCanvas from "../components/GameCanvas";
+import LeaderBoard from "../components/loading/LeaderBoard";
 
 export default function MaskGenerateLoading() {
   const [loading, setLoading] = useState(true);
@@ -202,6 +203,7 @@ export default function MaskGenerateLoading() {
           />
           {/* <button onClick={() => setCurrentStep(4)}>button</button> */}
           <GameCanvas />
+          <LeaderBoard />
         </div>
       ) : (
         <p></p>

@@ -315,7 +315,9 @@ export default function StepFivePage() {
               {files.length === 0 ? (
                 <div className="flex flex-col justify-center items-center gap-2">
                   <ImageIcon size={32} color="#8f8b8b" weight="light" />
-                  <span className="text-text-gray">Click to upload</span>
+                  <span className="text-text-gray text-[0.5vw]">
+                    Click to upload
+                  </span>
                 </div>
               ) : (
                 <AnimatePresence>
@@ -350,7 +352,7 @@ export default function StepFivePage() {
           </div>
           <button
             onClick={onNewVersionClick}
-            className="mt-10 cursor-pointer label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-1"
+            className="mt-10 cursor-pointer label_17m text-[0.8vw] w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-1"
           >
             Make New Version →
           </button>
@@ -390,7 +392,7 @@ export default function StepFivePage() {
           </div>
           <button
             onClick={handleDownloadSelectedImage}
-            className="mt-15 cursor-pointer label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-1"
+            className="mt-15 cursor-pointer label_17m  text-[0.8vw] w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-1"
           >
             Download
           </button>

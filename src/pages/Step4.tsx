@@ -13,6 +13,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { AnimatePresence, motion } from "motion/react";
 import { doc, setDoc } from "firebase/firestore";
 import InpaintModal from "../components/inpaint/InpaintModal";
+import Tutorial from "../components/step4/Tutorial";
 
 function triggerDownload(url: string, filename: string) {
   const link = document.createElement("a");
@@ -36,6 +37,8 @@ export default function StepFourPage() {
     setPrompt,
     setMaskImage,
     setCurrentStep,
+    initId,
+    conceptId,
   } = useStep();
   const [wandStep, setWandStep] = useState<number | null>(0);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
@@ -51,6 +54,7 @@ export default function StepFourPage() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [tutorialOpen, setTutorialOpen] = useState(true);
 
   useEffect(() => {
     setSelectedImageUrl(
@@ -179,6 +183,8 @@ export default function StepFourPage() {
         await setDoc(doc(db, "gallery", newId), {
           id: newId,
           image_url: downloadURL,
+          frame_id: initId,
+          concept_id: conceptId,
           created_at: new Date().toISOString(),
         });
 
@@ -209,10 +215,8 @@ export default function StepFourPage() {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
-  console.log(selectedImageFile instanceof File);
-
   return (
-    <div className="w-screen h-screen grid grid-cols-[1fr_500px] pt-[8.2rem] border-border-gray">
+    <div className="w-screen h-screen grid grid-cols-[2fr_1fr] pt-[8.2rem] border-border-gray">
       <div className="relative w-full border-t-1 border-r-1 flex justify-center items-center">
         <button
           onClick={() => setCurrentStep(3)}
@@ -244,7 +248,7 @@ export default function StepFourPage() {
             <div className="flex gap-[2rem] mt-5">
               <button
                 onClick={() => setWandStep(0)}
-                className={`cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[5rem] h-[5rem] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] ${
+                className={`cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[3vw] h-[3vw] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] ${
                   0 === wandStep ? "[background:var(--gradient-main)]" : ""
                 }`}
               >
@@ -256,7 +260,7 @@ export default function StepFourPage() {
               </button>
               <button
                 onClick={() => setWandStep(1)}
-                className={`cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[5rem] h-[5rem] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] ${
+                className={`cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[3vw] h-[3vw] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] ${
                   1 === wandStep ? "[background:var(--gradient-main)]" : ""
                 }`}
               >
@@ -268,7 +272,7 @@ export default function StepFourPage() {
               </button>
               <button
                 onClick={() => setWandStep(2)}
-                className={`cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[5rem] h-[5rem] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] ${
+                className={`cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[3vw] h-[3vw] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] ${
                   2 === wandStep ? "[background:var(--gradient-main)]" : ""
                 }`}
               >
@@ -280,7 +284,7 @@ export default function StepFourPage() {
               </button>
               <button
                 onClick={() => setWandStep(3)}
-                className={`cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[5rem] h-[5rem] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] ${
+                className={`cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[3vw] h-[3vw] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] ${
                   3 === wandStep ? "[background:var(--gradient-main)]" : ""
                 }`}
               >
@@ -292,7 +296,7 @@ export default function StepFourPage() {
               </button>
               <button
                 onClick={() => setWandStep(4)}
-                className={`label_17m text-[1.4rem] cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[7rem] h-[5rem] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] `}
+                className={`label_17m text-[1vw] cursor-pointer hover:[background:var(--gradient-main)] flex justify-center items-center w-[5vw] h-[3vw] border-1 border-border-gray button-shadow [background:var(--gradient-gray)] `}
               >
                 RESET
               </button>
@@ -315,7 +319,9 @@ export default function StepFourPage() {
               {files.length === 0 ? (
                 <div className="flex flex-col justify-center items-center gap-2">
                   <ImageIcon size={32} color="#8f8b8b" weight="light" />
-                  <span className="text-text-gray">Click to upload</span>
+                  <span className="text-text-gray text-[0.5vw]">
+                    Click to upload
+                  </span>
                 </div>
               ) : (
                 <AnimatePresence>
@@ -350,7 +356,7 @@ export default function StepFourPage() {
           </div>
           <button
             onClick={onNewVersionClick}
-            className="mt-10 cursor-pointer label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-1"
+            className="mt-10 cursor-pointer label_17m w-[15vw] h-[3vw] text-[0.8vw] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-1"
           >
             Make New Version →
           </button>
@@ -390,12 +396,15 @@ export default function StepFourPage() {
           </div>
           <button
             onClick={handleDownloadSelectedImage}
-            className="mt-15 cursor-pointer label_17m w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-1"
+            className="mt-15 cursor-pointer label_17m w-[15vw] h-[3vw] text-[0.8vw] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-1"
           >
             Download
           </button>
         </div>
       </div>
+      <AnimatePresence>
+        {tutorialOpen && <Tutorial onClose={() => setTutorialOpen(false)} />}
+      </AnimatePresence>
       {modalOpen && (
         <InpaintModal
           onClose={() => setModalOpen(false)}

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useStep } from "../../context/StepContext";
 
 export default function Header() {
@@ -20,6 +20,7 @@ export default function Header() {
     { label: "GALLERY", path: "/gallery" },
     { label: "MAKE", path: "/make" },
   ];
+
   return (
     <div className="cursor-pointer absolute top-5 left-5 flex justify-center items-center gap-10">
       <img

@@ -62,6 +62,12 @@ html {
     rgba(238, 238, 238, 0.74) 70.67%,
     var(--pink-300) 100%
   );
+  --gradient-modal: linear-gradient(
+    180deg,
+    #fff 0%,
+    rgba(238, 238, 238, 0.94) 100%,
+    /* var(--pink-300) 100% */
+  );
   --gradient-black: linear-gradient(
     180deg,
     var(--gray-800) 0%,

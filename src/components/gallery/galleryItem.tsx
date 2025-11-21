@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 
 interface GalleryImageType {
+  concept_id: number;
   frame_id: number;
   id: string;
   image_url: string;
+  created_at: string;
 }
 
 export default function GalleryItem({
   image,
   index,
+  setSelectedImage,
+  setModalOpen,
 }: {
   image: GalleryImageType;
   index: number;
+  setSelectedImage: (image: GalleryImageType) => void;
+  setModalOpen: (open: boolean) => void;
 }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(true);
@@ -27,8 +33,17 @@ export default function GalleryItem({
     }
   }, [imgLoaded]);
 
+  function handleClick() {
+    setSelectedImage(image);
+    setModalOpen(true);
+  }
+
   return (
-    <div key={index} className="w-full min-h-[15vw] pt-5 flex flex-col">
+    <div
+      onClick={handleClick}
+      key={index}
+      className="w-full min-h-[15vw] pt-5 flex flex-col"
+    >
       <span className="label_17r text-text-gray500 font-[300]">
         #{index + 1}
       </span>

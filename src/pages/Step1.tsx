@@ -150,7 +150,7 @@ export default function StepOnePage() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [selectedGuide, setSelectedGuide] = useState<number | null>(null);
 
-  const { setConceptImages, setCurrentStep } = useStep();
+  const { setConceptImages, setCurrentStep, setConceptId } = useStep();
 
   useEffect(() => {
     const fetchGuideImages = async () => {
@@ -228,6 +228,7 @@ export default function StepOnePage() {
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(thumbFile);
         dataTransfer.items.add(secondFile);
+        setConceptId(selectedGuide);
 
         setConceptImages(dataTransfer.files);
       } catch (error) {
@@ -304,7 +305,8 @@ export default function StepOnePage() {
       <h2 className="label_14l mt-[3rem] mb-[2rem]">
         생각나는 이미지가 없다면 가이드 이미지를 선택해 보세요 .
       </h2>
-      <div className="mb-20 pb-10 custom-scrollbar-x max-w-[1100px] h-[22rem] overflow-x-scroll overflow-y-hidden flex justify-start items-center gap-2">
+      {/* <div className="mb-20 pb-10 custom-scrollbar-x max-w-[1100px] h-[22rem] overflow-x-scroll overflow-y-hidden flex justify-start items-center gap-2"> */}
+      <div className="mb-20 pb-10 custom-scrollbar-x max-w-[1100px] flex-wrap flex justify-center items-center gap-2">
         {/* --- ▼▼▼ 수정된 부분 (2) ▼▼▼ --- */}
         {guideImages.map((image, index) => (
           <GuideImageItem

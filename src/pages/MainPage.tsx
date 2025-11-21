@@ -9,50 +9,79 @@ export default function MainPage(): React.JSX.Element {
 
   return (
     <div className=" inset-0 w-screen h-screen absolute overflow-scroll pt-[5rem]">
-      <motion.img
+      {/* <motion.img
         className="absolute top-[57vh] right-[30vw] w-[25rem]"
         src="/mainpage/glasses1.png"
         alt=""
+      /> */}
+      <motion.img
+        className="absolute top-[57vh] right-[20vw] w-[25rem]"
+        src="/mainpage/fabric.gif"
+        alt=""
       />
 
-      <motion.img
+      {/* <motion.img
         transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
         className="absolute top-[23vh] left-[5vw] w-[25rem]"
         src="/mainpage/glasses2.png"
         alt=""
-      />
-      {/* <motion.img
-        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-        className="z-0 absolute top-[23vh] left-[5vw] w-[50rem]"
-        src="/mainpage/ezgif1.gif"
-        alt=""
       /> */}
-
       <motion.img
+        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+        className="z-0 absolute top-[23vh] left-[5vw] w-[25rem]"
+        src="/mainpage/wing.gif"
+        alt=""
+      />
+
+      {/* <motion.img
         transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
         className="absolute top-[50vh] left-[5rem] w-[25rem]"
         src="/mainpage/glasses3.png"
         alt=""
+      /> */}
+      <motion.img
+        transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+        className="absolute top-[50vh] left-[5rem] w-[25rem]"
+        src="/mainpage/chess.gif"
+        alt=""
       />
 
-      <motion.img
+      {/* <motion.img
         transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
         className="absolute top-[30vh] left-[35vw] w-[25rem]"
         src="/mainpage/glasses4.png"
         alt=""
+      /> */}
+      <motion.img
+        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+        className="absolute top-[30vh] left-[35vw] w-[25rem]"
+        src="/mainpage/yellow.gif"
+        alt=""
       />
-
+      {/* 
       <motion.img
         transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
         className="absolute top-[10vh] right-[20vw] w-[25rem]"
         src="/mainpage/glasses5.png"
         alt=""
+      /> */}
+      <motion.img
+        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+        className="absolute top-[10vh] right-[20vw] w-[25rem]"
+        src="/mainpage/snow.gif"
+        alt=""
       />
 
-      <motion.img
+      {/* <motion.img
         transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
         className="absolute top-[50vh] left-[45vw] w-[25rem]"
         src="/mainpage/glasses6.png"
+        alt=""
+      /> */}
+      <motion.img
+        transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+        className="absolute top-[50vh] left-[45vw] w-[25rem]"
+        src="/mainpage/chair.gif"
         alt=""
       />
       <motion.span
