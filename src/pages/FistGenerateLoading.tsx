@@ -100,7 +100,6 @@ export default function FirstGenerateLoading() {
       setPreviewImageFiles(files);
 
       setLoading(false);
-      setTimeout(() => setCurrentStep(3), 800);
     } catch (err) {
       console.error("❌ 전송 실패:", err);
     }
@@ -159,24 +158,32 @@ export default function FirstGenerateLoading() {
 
   return (
     <div>
-      {loading ? (
-        <div className="flex flex-col items-center gap-20">
-          <p className="heading_20b">이미지 생성 중...</p>
-          {/* <img src="/loading.svg" alt="loading" /> */}
-          <ProgressBar
-            borderRadius="50px"
-            bgColor="pink"
-            className="w-[40vw]"
-            completed={Math.floor((sendFiles.length / 6 + 0.15) * 100)}
-            animateOnRender={true}
-            labelColor="black"
-          />
-          <GameCanvas />
-          <LeaderBoard />
-        </div>
-      ) : (
-        <p></p>
-      )}
+      <div className="flex flex-col items-center gap-20">
+        {loading ? (
+          <h2 className="heading_20b">이미지 생성 중...</h2>
+        ) : (
+          <div className="flex flex-col items-center">
+            <h2 className="label_17m">생성이 완료되었습니다!</h2>
+            <h2
+              className="flex justify-center items-center heading_20b cursor-pointer label_17m text-[1.8rem] w-[25rem] h-[4.5rem] border-1 border-text-gray button-shadow [background:var(--gradient-button)] active:[box-shadow:none] active:translate-y-2"
+              onClick={() => setCurrentStep(3)}
+            >
+              다음 단계로 이동하기 →
+            </h2>
+          </div>
+        )}
+        {/* <img src="/loading.svg" alt="loading" /> */}
+        <ProgressBar
+          borderRadius="50px"
+          bgColor="pink"
+          className="w-[40vw]"
+          completed={Math.floor((sendFiles.length / 6) * 100)}
+          animateOnRender={true}
+          labelColor="black"
+        />
+        <GameCanvas />
+        <LeaderBoard />
+      </div>
     </div>
   );
 }
